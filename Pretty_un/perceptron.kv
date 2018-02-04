@@ -1,0 +1,257 @@
+<mainMenu>:
+
+    FloatLayout:
+        canvas:
+            Color:
+                rgba: 1, 1, 1, 1
+            Rectangle:
+                pos: self.pos
+                size: self.size
+                source: "Img/back.jpg"
+
+
+        BoxLayout:
+            size_hint_y: None
+            pos_hint: {"x": 0, 'y': .95}
+            height: "30dp"
+            Button:
+                size_hint_x: None
+                size_hint_x: .04
+                id: dumy
+                on_press: root.pr_f()
+            Label:
+                color: 1,0,1,1
+                text:"Plane"
+            Label:
+                size_hint_x: .8
+
+
+        BoxLayout:
+            size_hint_y: None
+            pos_hint: {"x": 0, 'y': 0}
+            height: "570dp"
+
+            BoxLayout:
+
+                orientation: 'vertical'
+                size_hint_x: 1.4
+                canvas:
+                    Rectangle:
+                        pos: (30,80)
+                        size: (130,90)
+                        source: "Img/fa.jpg"
+                    Rectangle:
+                        pos: (44,125)
+                        size: (20,20)
+                        source: "Img/fa.png"
+                    Rectangle:
+                        pos: (44,100)
+                        size: (20,20)
+                        source: "Img/tu.png"
+
+
+                Label:
+                    size_hint_y: None
+                    size_hint_x: None
+                    height: "20dp"
+
+                Label:
+                    id: lab
+                    text: "hello"
+                    size_hint_y: None
+                    size_hint_x: None
+                    pos_hint: {"x": 0.09, 'y': 0}
+                    height: "370dp"
+                    width:  "370dp"
+                    canvas:
+
+                        Color:
+                            rgba: 1, 0, 1, .8
+                        Line:
+                            width: 2.
+                            rectangle: (self.x, self.y, self.width, self.height)
+                        Color:
+                            rgba: 1, 1, 1, 1
+                        Rectangle:
+                            pos: self.pos
+                            size: self.size
+                        Color:
+                            rgba: 1, 0, 0, .5
+                        Line:
+                            points: (43+185, 550, 43+185, 184)
+                            width: 1.2
+
+                        Line:
+                            points: (43, 550-185, 43+370, 550-185)
+                            width: 1.2
+                Label:
+                    id: lab
+                    size_hint_y: None
+                    height: "10dp"
+                BoxLayout:
+                    pos_hint_y: None
+                    size_hint_x: .89
+                    size_hint_y: 0.2
+                    Label:
+                        color: 1,0,1,1
+                        size_hint_x: .2
+                        halign: 'left'
+                        text: "Class:"
+                    Label:
+                        size_hint_x: .3
+                        halign: 'left'
+
+                    Button:
+
+                        size_hint_x: .15
+                        text: "Reset"
+                        on_press: root.reset()
+
+                BoxLayout:
+                    BoxLayout:
+                        size_hint_x: .6
+                        size_hint_y: 1
+                        pading: 1
+
+                        orientation: 'vertical'
+                        ToggleButton:
+                            pos_hint_y: None
+                            group: "chclass"
+                            size_hint_x: .4
+                            size_hint_y: .05
+                            pos_hint: {"x": 0.42, 'y': 0}
+                            text: "Class1"
+                            id: cl1
+                            state: 'down'
+                            on_release: root.chclass = True
+
+                        ToggleButton:
+                            pos_hint: {"x": 0.42, 'y': 0}
+                            group: "chclass"
+                            size_hint_x: .4
+                            size_hint_y: .05
+                            text: "Class2"
+                            id: cl2
+                            on_release: root.chclass = False
+                        Label:
+                            size_hint_y: .18
+
+                    BoxLayout:
+
+                        Label:
+            BoxLayout:
+                spacing:20
+                orientation: 'vertical'
+                size_hint_x: .9
+                canvas:
+                    Color:
+                        rgba: 1, 1, 1, .9
+                    Rectangle:
+                        pos: (self.pos[0]-10,self.pos[1]+20)
+                        size: (self.size[0]+20,self.size[1]-20)
+                        source: "Img/fa.jpg"
+                Label:
+                    text: "Training"
+                    size_hint_y: .1
+
+                GridLayout:
+
+                    rows: 2
+                    cols: 3
+                    size_hint_y: .25
+                    spacing: (1,10)
+                    Label:
+                        text: "Learning_rate:"
+
+                    TextInput:
+                        input_filter: 'float'
+                        multiline: False
+                        font_size: 14
+                        hint_text: "0.1"
+                        pos_hint:{"x": 0.2, 'y':0}
+                        size_hint_x: None
+
+
+                    Label:
+
+
+                    Label:
+
+                        text: "Max_Epochs:"
+
+                    TextInput:
+                        input_filter: 'int'
+                        multiline: False
+                        hint_text: "100"
+                        pos_hint:{"x": 0.1, 'y':0}
+                        size_hint_x: None
+
+
+
+                Button:
+                    size_hint_y: .1
+                    size_hint_x: .3
+                    pos_hint:{"x": 0.35, 'y':0}
+                    text: "Train"
+                BoxLayout:
+                    size_hint_y: .1
+                    size_hint_x: .4
+                    Label:
+                        text: "State: "
+                    Label:
+                        canvas:
+                            Rectangle:
+                                pos: (self.pos[0],self.pos[1]+5)
+                                size: (self.size[0],self.size[1]-15)
+
+
+                Label:
+                    size_hint_y: .2
+                    canvas:
+                        Color:
+                            rgba: 1, 1, 1, .9
+                        Rectangle:
+                            pos: (self.pos[0]-10,self.pos[1])
+                            size: (self.size[0]+20,self.size[1]-15)
+                            source: "Img/22.png"
+                Label:
+                    text:"Testing \n IDW!!"
+
+
+
+
+
+
+
+            BoxLayout:
+                size_hint_x: .1
+
+    Label:
+
+        color: .1,.4,.1, 1
+        size_hint_y: None
+        size_hint_x: None
+        pos_hint: {"x": 0.23, 'y': 0.85}
+        text: "y: 5"
+        font_size: 15
+    Label:
+        color: .1,.4,.1, 1
+        size_hint_y: None
+        size_hint_x: None
+        pos_hint: {"x": 0.23, 'y': 0.2}
+        text: "y: -5"
+        font_size: 15
+    Label:
+        color: .1,.4,.1, 1
+        size_hint_y: None
+        size_hint_x: None
+        pos_hint: {"x": 0, 'y': 0.52}
+        text: "x: -5"
+        font_size: 15
+    Label:
+        color: .1,.4,.1, 1
+        size_hint_y: None
+        size_hint_x: None
+        pos_hint: {"x": 0.47, 'y': 0.52}
+        text: "x: 5"
+        font_size: 15
