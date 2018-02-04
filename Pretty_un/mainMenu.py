@@ -57,7 +57,7 @@ class mainMenu(FloatLayout):
         Line(points= (43, 550 - 185, 43 + 370, 550 - 185),width= 1.2)
 
 
-
+#
 
 
     def on_touch_up(self, touch):
