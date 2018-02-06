@@ -1,5 +1,4 @@
 <mainMenu>:
-
     FloatLayout:
         canvas:
             Color:
@@ -123,7 +122,7 @@
                             text: "Class1"
                             id: cl1
                             state: 'down'
-                            on_release: root.chclass = True
+                            on_release: root.CH_class = True
 
                         ToggleButton:
                             pos_hint: {"x": 0.42, 'y': 0}
@@ -132,7 +131,7 @@
                             size_hint_y: .05
                             text: "Class2"
                             id: cl2
-                            on_release: root.chclass = False
+                            on_release: root.CH_class = False
                         Label:
                             size_hint_y: .18
 
@@ -216,6 +215,7 @@
                             source: "Img/22.png"
                 Label:
                     text:"Testing \n IDW!!"
+
 
 
 
