@@ -1,12 +1,14 @@
 from kivy.config import Config
 #Esta linea es para impedir una función automática que tiene con el click derecho
+from kivy.properties import ObjectProperty
+
 Config.set('input', 'mouse', 'mouse,multitouch_on_demand')
 from kivy.app import App
 from kivy.core.window import Window
 from kivy.graphics import Color
 from kivy.graphics.vertex_instructions import Rectangle, Line
 from kivy.uix.floatlayout import FloatLayout
-from perceptron import *
+from Pretty_un.Perceptron import *
 
 #Establece el tamaño de la pantalla--- un poco obvio
 Window.size = (800, 600)
@@ -17,6 +19,7 @@ class mainMenu(FloatLayout):
     Max_epochs=100
     Entry_x = []            #Listado de entradas
     Wish_y =[]              #Listado de labels o clase deseada
+    button_train = ObjectProperty(None)
 
     #Constructor
     def __init__(self, **kwargs):
@@ -27,7 +30,7 @@ class mainMenu(FloatLayout):
     #Limpia el plano y la variable de Entry_x y Wish_y
     def reset(self):
         with self.canvas:
-            Color (1,1,1,1, mode ='rbg')
+            Color(1,1,1,1, mode ='rbg')
             Rectangle(pos =(42,550-370), size =(370,370), source= "Img/back2.jpg")
             self.set_lines()
         self.Entry_x.clear()
@@ -37,11 +40,12 @@ class mainMenu(FloatLayout):
     def add_to_entry(self, x, y, d):
         OldRangex = (412 - (412-370))
         NewRangex = (5 - (-5))
-        NewValuex = str(round((((x - (412-370)) * NewRangex) / OldRangex) + (-5), 1))
+        NewValuex = round((((x - (412-370)) * NewRangex) / OldRangex) + (-5), 1)
         OldRangey = ((180 + 370) - 180)
         NewRangey = (5 - (-5))
-        NewValuey = str(round((((y - 180) * NewRangey) / OldRangey) + (-5), 1))
-        self.Entry_x.append((NewValuex, NewValuey))
+        NewValuey = round((((y - 180) * NewRangey) / OldRangey) + (-5), 1)
+        #entrada fantasma de -1 para el umbral
+        self.Entry_x.append((-1.0, float(NewValuex), float(NewValuey)))
         self.Wish_y.append(d)
 
     #(Referencia) para saber que todom se registro bien borrar luego O.o por que se puso azul?
@@ -80,8 +84,29 @@ class mainMenu(FloatLayout):
 
     #cuando se da clic en entrenar
     def start_training(self, lr, me):
-        perceptron = perceptron(lr,me,self.Entry_x,self.Wish_y)
+        self.perceptron = Perceptron(lr,me,self.Entry_x,self.Wish_y,self)
+        print("Pesos: ")
+        print(self.perceptron.weights)
 
+    def get_data(self, lrn, mx, es):
+        lr = self.Learning_rate
+        me = self.Max_epochs
+        if lrn.text != "":
+            try:
+                lr = float(lrn.text)
+            except ValueError:
+                print("No es Flotante")
+        if mx.text != "":
+            try:
+                me = int(mx.text)
+            except ValueError:
+                print("No es Entero")
+        es.text = "Training..."
+        self.start_training(lr,me)
+        if self.perceptron.nonlinear:
+            es.text = "Non Linear"
+        else:
+            es.text = "Trained!"
 
 class PerceptronApp(App):
     def build(self):

@@ -164,6 +164,7 @@
 
                     TextInput:
                         input_filter: 'float'
+                        id: lrnrt
                         multiline: False
                         font_size: 14
                         hint_text: "0.1"
@@ -180,6 +181,7 @@
 
                     TextInput:
                         input_filter: 'int'
+                        id: mxep
                         multiline: False
                         hint_text: "100"
                         pos_hint:{"x": 0.1, 'y':0}
@@ -193,16 +195,16 @@
                     pos_hint:{"x": 0.35, 'y':0}
                     id: train
                     text: "Train"
+                    on_release: root.get_data(lrnrt, mxep, state)
+
                 BoxLayout:
                     size_hint_y: .1
                     size_hint_x: .4
                     Label:
                         text: "State: "
                     Label:
-                        canvas:
-                            Rectangle:
-                                pos: (self.pos[0],self.pos[1]+5)
-                                size: (self.size[0],self.size[1]-15)
+                        id: state
+                        text: "Untrained"
 
 
                 Label:
@@ -244,7 +246,7 @@
         color: .1,.4,.1, 1
         size_hint_y: None
         size_hint_x: None
-        pos_hint: {"x": 0, 'y': 0.52}
+        pos_hint: {"x": -0.03, 'y': 0.52}
         text: "x: -5"
         font_size: 15
     Label:
