@@ -6,7 +6,7 @@ from kivy.core.window import Window
 from kivy.graphics import Color
 from kivy.graphics.vertex_instructions import Rectangle, Line
 from kivy.uix.floatlayout import FloatLayout
-
+from perceptron import *
 
 #Establece el tamaño de la pantalla--- un poco obvio
 Window.size = (800, 600)
@@ -24,13 +24,14 @@ class mainMenu(FloatLayout):
         #Crea las lineas del plano
         self.set_lines()
 
-    #Limpia el plano y la variable de Entry_x
+    #Limpia el plano y la variable de Entry_x y Wish_y
     def reset(self):
         with self.canvas:
             Color (1,1,1,1, mode ='rbg')
             Rectangle(pos =(42,550-370), size =(370,370), source= "Img/back2.jpg")
             self.set_lines()
         self.Entry_x.clear()
+        self.Wish_y.clear()
 
     #Agrega la entrada a la lista junto con la deseada *pasa el rango a (-5 a 5)*
     def add_to_entry(self, x, y, d):
@@ -45,7 +46,7 @@ class mainMenu(FloatLayout):
 
     #(Referencia) para saber que todom se registro bien borrar luego O.o por que se puso azul?
     def pr_f(self):
-        print(self.Entryx)
+        print(self.Entry_x)
 
     #(La funcion que dibuja las lineas del plano)
     def set_lines(self):
@@ -77,11 +78,9 @@ class mainMenu(FloatLayout):
                 Rectangle(pos=(touch.pos[0] - 12, touch.pos[1] - 12), size=(25, 25), source=s, group="dot")
             self.add_to_entry(touch.pos[0], touch.pos[1],nclass)
 
-
-
-
-
-
+    #cuando se da clic en entrenar
+    def start_training(self, lr, me):
+        perceptron = perceptron(lr,me,self.Entry_x,self.Wish_y)
 
 
 class PerceptronApp(App):
