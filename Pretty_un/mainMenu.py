@@ -126,9 +126,6 @@ class mainMenu(FloatLayout):
                 xi = (b-yi) / (-m)
             if xi < 0 and yi < 0:
                 yi += b
-                if yi<-5:
-                    print("yep", yi)
-            print("xi ",xi," yi ",yi)
             xf = 5
             yf = m*xf+b
             if yf > 5:
@@ -139,8 +136,6 @@ class mainMenu(FloatLayout):
                 xf = (b-yf) / (-m)
             if xf < 0 and yf < 0:
                 yf += b
-                print ("yep2")
-            print("xf ", xf, " yf ", yf)
             OldRangex = (5 - (-5))
             NewRangex = (412 - (412 - 370))
             NewValuexi = round((((xi - (-5)) * NewRangex) / OldRangex) + (412 - 370), 1)
