@@ -122,7 +122,7 @@
                             text: "Class1"
                             id: cl1
                             state: 'down'
-                            on_release: root.CH_class = True
+                            on_release: root.CH_class = 0
 
                         ToggleButton:
                             pos_hint: {"x": 0.42, 'y': 0}
@@ -131,7 +131,7 @@
                             size_hint_y: .05
                             text: "Class2"
                             id: cl2
-                            on_release: root.CH_class = False
+                            on_release: root.CH_class = 1
                         Label:
                             size_hint_y: .18
 
@@ -217,7 +217,28 @@
                             size: (self.size[0]+20,self.size[1]-15)
                             source: "Img/22.png"
                 Label:
-                    text:"Testing \n IDW!!"
+                    text:"Testing"
+                    size_hint_y: .2
+
+                ToggleButton:
+                    text:"New dot"
+                    size_hint_y: .1
+                    size_hint_x: .3
+                    pos_hint:{"x": 0.35, 'y':0}
+                    group: "chclass"
+                    on_release: root.CH_class = 3
+
+
+
+
+                Button:
+                    text:"Test"
+                    size_hint_y: .1
+                    size_hint_x: .3
+                    pos_hint:{"x": 0.35, 'y':0}
+                    on_release: root.test()
+                Label:
+                    size_hint_y: .4
 
 
 

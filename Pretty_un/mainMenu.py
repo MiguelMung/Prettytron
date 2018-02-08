@@ -4,24 +4,32 @@ import time
 from kivy.config import Config
 #Esta linea es para impedir una función automática que tiene con el click derecho
 from kivy.graphics.instructions import Callback
-from kivy.properties import ObjectProperty
+from kivy.properties import ObjectProperty, ListProperty
+from kivy.uix.widget import Widget
 
 Config.set('input', 'mouse', 'mouse,multitouch_on_demand')
 from kivy.app import App
+from kivy.clock import Clock
+from kivy.animation import Animation
 from kivy.core.window import Window
 from kivy.graphics import Color
 from kivy.graphics.vertex_instructions import Rectangle, Line
 from kivy.uix.floatlayout import FloatLayout
 from Pretty_un.Perceptron import *
-
+##
 #Establece el tamaño de la pantalla--- un poco obvio
 Window.size = (800, 600)
 
+class ClockRect(Widget):
+    velocity = ListProperty([10, 15])
+
+
 class mainMenu(FloatLayout):
-    CH_class = True         #Si es true es clase uno si false clase dos
+    CH_class = 0         #Si es true es clase uno si false clase dos
     Learning_rate=0.1
     Max_epochs=100
     Entry_x = []            #Listado de entradas
+    Entry_test =[]
     Wish_y =[]              #Listado de labels o clase deseada
     button_train = ObjectProperty(None)
 
@@ -72,17 +80,21 @@ class mainMenu(FloatLayout):
         NewRangey = (5 - (-5))
         NewValuey = round((((y - 180) * NewRangey) / OldRangey) + (-5), 1)
         #entrada fantasma de -1 para el umbral
-        self.Entry_x.append((-1.0, float(NewValuex), float(NewValuey)))
-        self.Wish_y.append(d)
+        if d==3:
+            self.Entry_test.append((-1.0, float(NewValuex), float(NewValuey)))
+        else:
+            self.Entry_x.append((-1.0, float(NewValuex), float(NewValuey)))
+            self.Wish_y.append(d)
 
     #(Referencia) para saber que todom se registro bien borrar luego O.o por que se puso azul?
     def pr_f(self):
         print(self.Entry_x)
 
     def draw_um(self):
+        print(self.perceptron.time_weights)
         self.draw_w(self.perceptron.time_weights[0],[1,0,0])
         for i in range(1,len(self.perceptron.time_weights)-1):
-            time.sleep(0.5)
+            time.sleep(1)
             self.draw_w(self.perceptron.time_weights[i], [0, 0, 1])
         self.draw_w(self.perceptron.time_weights[len(self.perceptron.time_weights)-1], [0, 1, 0])
 
@@ -117,6 +129,10 @@ class mainMenu(FloatLayout):
             NewValueyf = round((((yf - (-5)) * NewRangey) / OldRangey) + 180, 1)
             Line(points=(NewValuexi, NewValueyi, NewValuexf, NewValueyf), width=1.2)
 
+    def test(self):
+        #aqui lo de la prueba
+        pass
+
     #(La funcion que dibuja las lineas del plano)
     def set_lines(self):
         with self.canvas:
@@ -137,12 +153,15 @@ class mainMenu(FloatLayout):
         if(touch.pos[0]>42 and touch.pos[0]<43+370 and touch.pos[1]<550 and touch.pos[1]>180):
 
             with self.canvas:
-                if self.CH_class:
+                if self.CH_class ==0:
                     nclass=0
                     s ="Img/fa.png"
-                else:
+                elif self.CH_class ==1:
                     nclass=1
                     s = "Img/tu.png"
+                elif self.CH_class == 3:
+                    nclass = 3
+                    s = "Img/te.png"
                 Color(1, 1, 1, mode='rgv')
                 Rectangle(pos=(touch.pos[0] - 12, touch.pos[1] - 12), size=(25, 25), source=s, group="dot")
             self.add_to_entry(touch.pos[0], touch.pos[1],nclass)

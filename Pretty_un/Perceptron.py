@@ -24,6 +24,9 @@ class Perceptron:
             pw = 1
         return pw
 
+    def set_time(self, a,b,c):
+        self.time_weights.append((a,b,c))
+
     def start(self, window):
         #inicializando los pesos con valores random entre -5 y 5
         self.weights = []
@@ -36,7 +39,7 @@ class Perceptron:
         self.epochs = 0
         while(not done and self.epochs < self.max_epochs):
             done = True
-            self.time_weights.append(self.weights)
+            self.set_time(self.weights[0],self.weights[1],self.weights[2])
             for i in range(0,len(self.entries)):
                 #obteniendo el error
                 error = self.desired[i] - self.Pw(self.entries[i])
