@@ -22,8 +22,6 @@ from Pretty_un.Perceptron import *
 #Establece el tamaño de la pantalla--- un poco obvio
 Window.size = (800, 600)
 
-class ClockRect(Widget):
-    velocity = ListProperty([10, 15])
 
 
 class mainMenu(FloatLayout):
@@ -32,9 +30,13 @@ class mainMenu(FloatLayout):
     Max_epochs=100
     Entry_x = []            #Listado de entradas
     Entry_test =[]
-    Wish_y =[]              #Listado de labels o clase deseada
+    Wish_y =[]    #Listado de labels o clase deseada
     button_train = ObjectProperty(None)
     perceptron = None
+    anima = False
+    vuelta = 0
+
+
 
     #Constructor
     def __init__(self, **kwargs):
@@ -93,11 +95,18 @@ class mainMenu(FloatLayout):
     def pr_f(self):
         print(self.Entry_x)
 
-    def draw_um(self):
-        self.draw_w(self.perceptron.time_weights[0],[1,0,0])
-        for i in range(1,len(self.perceptron.time_weights)-1):
-            self.draw_w(self.perceptron.time_weights[i], [0, 0, 1])
-        self.draw_w(self.perceptron.time_weights[len(self.perceptron.time_weights)-1], [0, 1, 0])
+    def draw_um(self,*args):
+
+        if self.anima:
+            tam = len(self.perceptron.time_weights)
+            if tam>0:
+                if self.vuelta ==0:
+                    self.draw_w(self.perceptron.time_weights[0],[1,0,0])
+                elif self.vuelta >0 and self.vuelta<(tam-1) :
+                    self.draw_w(self.perceptron.time_weights[self.vuelta], [0, 0, 1])
+                elif self.vuelta == tam:
+                    self.draw_w(self.perceptron.time_weights[len(self.perceptron.time_weights)-1], [0, 1, 0])
+            self.vuelta+=1
 
     def draw_w(self,w, c):
         with self.canvas:
@@ -199,7 +208,8 @@ class mainMenu(FloatLayout):
     #cuando se da clic en entrenar
     def start_training(self, lr, me):
         self.perceptron = Perceptron(lr,me,self.Entry_x,self.Wish_y,self)
-        self.draw_um()
+        self.anima = True
+        self.vuelta = 0
 
     def get_data(self, lrn, mx, es):
         #limpiar lineas si hay
@@ -229,7 +239,9 @@ class mainMenu(FloatLayout):
 
 class PerceptronApp(App):
     def build(self):
-        return mainMenu()
+        menu = mainMenu()
+        Clock.schedule_interval(menu.draw_um, 1.0 / 80.0)
+        return menu
 
 
 PerceptronApp().run()
