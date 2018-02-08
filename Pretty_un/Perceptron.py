@@ -23,6 +23,13 @@ class Perceptron:
         if wx >= self.weights[0]:
             pw = 1
         return pw
+    #clasifica un nuevo set de puntos solo despues de ser entrenado
+    def clasify(self, new_points):
+        clases = []
+        if len(self.weights) != 0:
+            for p in new_points:
+                clases.append(self.Pw(p))
+        return clases
 
     def set_time(self, a,b,c):
         self.time_weights.append((a,b,c))

@@ -5,6 +5,8 @@ from kivy.config import Config
 #Esta linea es para impedir una función automática que tiene con el click derecho
 from kivy.graphics.instructions import Callback
 from kivy.properties import ObjectProperty, ListProperty
+from kivy.uix.label import Label
+from kivy.uix.popup import Popup
 from kivy.uix.widget import Widget
 
 Config.set('input', 'mouse', 'mouse,multitouch_on_demand')
@@ -32,6 +34,7 @@ class mainMenu(FloatLayout):
     Entry_test =[]
     Wish_y =[]              #Listado de labels o clase deseada
     button_train = ObjectProperty(None)
+    perceptron = None
 
     #Constructor
     def __init__(self, **kwargs):
@@ -47,6 +50,7 @@ class mainMenu(FloatLayout):
             self.set_lines()
         self.Entry_x.clear()
         self.Wish_y.clear()
+        self.Entry_test.clear()
         self.perceptron = None
 
     def soft_reset(self):
@@ -68,7 +72,6 @@ class mainMenu(FloatLayout):
                 OldRangey = (5 - (-5))
                 NewRangey = ((180 + 370) - 180)
                 NewValuey = round((((self.Entry_x[i][2] - (-5)) * NewRangey) / OldRangey) + 180, 1)
-
                 Rectangle(pos=(NewValuex - 12, NewValuey - 12), size=(25, 25), source=s, group="dot")
 
     #Agrega la entrada a la lista junto con la deseada *pasa el rango a (-5 a 5)*
@@ -93,7 +96,6 @@ class mainMenu(FloatLayout):
     def draw_um(self):
         self.draw_w(self.perceptron.time_weights[0],[1,0,0])
         for i in range(1,len(self.perceptron.time_weights)-1):
-            time.sleep(1)
             self.draw_w(self.perceptron.time_weights[i], [0, 0, 1])
         self.draw_w(self.perceptron.time_weights[len(self.perceptron.time_weights)-1], [0, 1, 0])
 
@@ -128,10 +130,39 @@ class mainMenu(FloatLayout):
             NewValueyf = round((((yf - (-5)) * NewRangey) / OldRangey) + 180, 1)
             Line(points=(NewValuexi, NewValueyi, NewValuexf, NewValueyf), width=1.2)
 
-    def test(self):
-        #aqui lo de la prueba
-        pass
+    def change_image(self, c, i):
+        with self.canvas:
+            if c == 0:
+                s = "Img/fa.png"
+            else:
+                s = "Img/tu.png"
+            Color(1, 1, 1, mode='rgv')
+            OldRangex = (5 - (-5))
+            NewRangex = (412 - (412 - 370))
+            NewValuex = round((((self.Entry_test[i][1] - (-5)) * NewRangex) / OldRangex) + (412 - 370), 1)
+            OldRangey = (5 - (-5))
+            NewRangey = ((180 + 370) - 180)
+            NewValuey = round((((self.Entry_test[i][2] - (-5)) * NewRangey) / OldRangey) + 180, 1)
+            Rectangle(pos=(NewValuex - 12, NewValuey - 12), size=(25, 25), source=s, group="dot")
 
+    def test(self):
+        if self.perceptron != None:
+            clases = self.perceptron.clasify(self.Entry_test)
+            if len(clases) != 0:
+                i = 0
+                for c in clases:
+                    self.change_image(c,i)
+                    i += 1
+            else:
+                popup = Popup(title='¡Error!',
+                              content=Label(text='Perceptron Sin Entrenar.'),
+                              size_hint=(None, None), size=(200, 100))
+                popup.open()
+        else:
+            popup = Popup(title='¡Error!',
+                          content=Label(text='Perceptron Sin Entrenar.'),
+                          size_hint=(None, None), size=(200, 100))
+            popup.open()
     #(La funcion que dibuja las lineas del plano)
     def set_lines(self):
         with self.canvas:
