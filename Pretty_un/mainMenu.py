@@ -54,6 +54,7 @@ class mainMenu(FloatLayout):
         self.Wish_y.clear()
         self.Entry_test.clear()
         self.perceptron = None
+        self.anima = False
 
     def soft_reset(self):
         self.perceptron = None
@@ -108,19 +109,22 @@ class mainMenu(FloatLayout):
                     self.draw_w(self.perceptron.time_weights[len(self.perceptron.time_weights)-1], [0, 1, 0])
             self.vuelta+=1
 
+
     def draw_w(self,w, c):
         with self.canvas:
             Color(c[0], c[1], c[2], 1.0, mode='rgb')
             m = -(w[0]/w[2])/(w[0]/w[1])
             b = w[0]/w[2]
             xi = -5
-            yi = m*xi+b
+            yi = m * xi + b
             if yi > 5:
                 yi = 5
                 xi = (b-yi) / (-m)
             elif yi < -5:
                 yi = -5
                 xi = (b-yi) / (-m)
+            if xi < 0 and yi < 0:
+                yi += b
             xf = 5
             yf = m*xf+b
             if yf > 5:
@@ -129,6 +133,8 @@ class mainMenu(FloatLayout):
             elif yf < -5:
                 yf = -5
                 xf = (b-yf) / (-m)
+            if xf < 0 and yf < 0:
+                yf += b
             OldRangex = (5 - (-5))
             NewRangex = (412 - (412 - 370))
             NewValuexi = round((((xi - (-5)) * NewRangex) / OldRangex) + (412 - 370), 1)
@@ -240,7 +246,7 @@ class mainMenu(FloatLayout):
 class PerceptronApp(App):
     def build(self):
         menu = mainMenu()
-        Clock.schedule_interval(menu.draw_um, 1.0 / 80.0)
+        Clock.schedule_interval(menu.draw_um, 0.2)
         return menu
 
 
