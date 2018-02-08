@@ -103,23 +103,23 @@ class mainMenu(FloatLayout):
         with self.canvas:
             Color(c[0], c[1], c[2], 1.0, mode='rgb')
             m = -(w[0]/w[2])/(w[0]/w[1])
-            b = -w[0]/w[2]
+            b = w[0]/w[2]
             xi = -5
             yi = m*xi+b
             if yi > 5:
                 yi = 5
-                xi = (yi - b)/m
+                xi = (b-yi) / (-m)
             elif yi < -5:
                 yi = -5
-                xi = (yi - b) / m
+                xi = (b-yi) / (-m)
             xf = 5
             yf = m*xf+b
             if yf > 5:
                 yf = 5
-                xf = (yf - b) / m
+                xf = (b-yf) / (-m)
             elif yf < -5:
                 yf = -5
-                xf = (yf - b) / m
+                xf = (b-yf) / (-m)
             OldRangex = (5 - (-5))
             NewRangex = (412 - (412 - 370))
             NewValuexi = round((((xi - (-5)) * NewRangex) / OldRangex) + (412 - 370), 1)
