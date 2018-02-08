@@ -91,7 +91,6 @@ class mainMenu(FloatLayout):
         print(self.Entry_x)
 
     def draw_um(self):
-        print(self.perceptron.time_weights)
         self.draw_w(self.perceptron.time_weights[0],[1,0,0])
         for i in range(1,len(self.perceptron.time_weights)-1):
             time.sleep(1)
