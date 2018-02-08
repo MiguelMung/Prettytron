@@ -48,6 +48,7 @@ class mainMenu(FloatLayout):
     def reset(self):
         with self.canvas:
             Color(1,1,1,1, mode ='rbg')
+            Rectangle(pos = (0,0), size=(800,600), source= "Img/b2.png")
             Rectangle(pos =(42,550-370), size =(370,370), source= "Img/back2.jpg")
             self.set_lines()
         self.Entry_x.clear()
@@ -148,9 +149,9 @@ class mainMenu(FloatLayout):
     def change_image(self, c, i):
         with self.canvas:
             if c == 0:
-                s = "Img/fa.png"
+                s = "Img/fa2.png"
             else:
-                s = "Img/tu.png"
+                s = "Img/tu2.png"
             Color(1, 1, 1, mode='rgv')
             OldRangex = (5 - (-5))
             NewRangex = (412 - (412 - 370))
@@ -158,7 +159,7 @@ class mainMenu(FloatLayout):
             OldRangey = (5 - (-5))
             NewRangey = ((180 + 370) - 180)
             NewValuey = round((((self.Entry_test[i][2] - (-5)) * NewRangey) / OldRangey) + 180, 1)
-            Rectangle(pos=(NewValuex - 12, NewValuey - 12), size=(25, 25), source=s, group="dot")
+            Rectangle(pos=(NewValuex - 12, NewValuey - 12), size=(26, 26), source=s, group="dot")
 
     def test(self):
         if self.perceptron != None:
