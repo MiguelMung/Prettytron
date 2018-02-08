@@ -221,28 +221,29 @@ class mainMenu(FloatLayout):
     def get_data(self, lrn, mx, es):
         #limpiar lineas si hay
         self.soft_reset()
-        lr = self.Learning_rate
-        me = self.Max_epochs
-        if lrn.text != "":
-            try:
-                lr = float(lrn.text)
-                if lr < 0.1 or lr > 0.9:
-                    lr = 0.1
-            except ValueError:
-                print("No es Flotante")
-        if mx.text != "":
-            try:
-                me = int(mx.text)
-                if me < 1:
-                    me = 100
-            except ValueError:
-                print("No es Entero")
-        es.text = "Training..."
-        self.start_training(lr,me)
-        if self.perceptron.nonlinear:
-            es.text = "Non Linear"
-        else:
-            es.text = "Trained!"
+        if(len(self.Entry_x)>0):
+            lr = self.Learning_rate
+            me = self.Max_epochs
+            if lrn.text != "":
+                try:
+                    lr = float(lrn.text)
+                    if lr < 0.1 or lr > 0.9:
+                        lr = 0.1
+                except ValueError:
+                    print("No es Flotante")
+            if mx.text != "":
+                try:
+                    me = int(mx.text)
+                    if me < 1:
+                        me = 100
+                except ValueError:
+                    print("No es Entero")
+            es.text = "Training..."
+            self.start_training(lr,me)
+            if self.perceptron.nonlinear:
+                es.text = "Non Linear"
+            else:
+                es.text = "Trained!"
 
 class PerceptronApp(App):
     def build(self):
