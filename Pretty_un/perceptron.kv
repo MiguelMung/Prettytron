@@ -195,7 +195,7 @@
                     pos_hint:{"x": 0.35, 'y':0}
                     id: train
                     text: "Train"
-                    on_release: root.get_data(lrnrt, mxep, state)
+                    on_release: root.get_data(lrnrt, mxep, state,epoch)
 
                 BoxLayout:
                     size_hint_y: .1
@@ -205,6 +205,12 @@
                     Label:
                         id: state
                         text: "Untrained"
+                Label:
+                    id: epoch
+                    text: "Number of Epochs: "
+                    pos_hint:{"x": 0.05, 'y':0}
+                    size_hint_y: .03
+                    size_hint_x: .4
 
 
                 Label:
@@ -238,7 +244,7 @@
                     pos_hint:{"x": 0.35, 'y':0}
                     on_release: root.test()
                 Label:
-                    size_hint_y: .4
+                    size_hint_y: .3
 
 
 

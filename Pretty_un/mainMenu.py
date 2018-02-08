@@ -46,9 +46,9 @@ class mainMenu(FloatLayout):
 
     #Limpia el plano y la variable de Entry_x y Wish_y
     def reset(self):
+
         with self.canvas:
-            Color(1,1,1,1, mode ='rbg')
-            Rectangle(pos = (0,0), size=(800,600), source= "Img/b2.png")
+            Color(1, 1, 1, 1, mode='rbg')
             Rectangle(pos =(42,550-370), size =(370,370), source= "Img/back2.jpg")
             self.set_lines()
         self.Entry_x.clear()
@@ -126,6 +126,9 @@ class mainMenu(FloatLayout):
                 xi = (b-yi) / (-m)
             if xi < 0 and yi < 0:
                 yi += b
+                if yi<-5:
+                    print("yep", yi)
+            print("xi ",xi," yi ",yi)
             xf = 5
             yf = m*xf+b
             if yf > 5:
@@ -136,6 +139,8 @@ class mainMenu(FloatLayout):
                 xf = (b-yf) / (-m)
             if xf < 0 and yf < 0:
                 yf += b
+                print ("yep2")
+            print("xf ", xf, " yf ", yf)
             OldRangex = (5 - (-5))
             NewRangex = (412 - (412 - 370))
             NewValuexi = round((((xi - (-5)) * NewRangex) / OldRangex) + (412 - 370), 1)
@@ -171,16 +176,19 @@ class mainMenu(FloatLayout):
                     i += 1
             else:
                 popup = Popup(title='¡Error!',
-                              content=Label(text='Perceptron Sin Entrenar.'),
+                              content=Label(text='Untrained perceptron.'),
                               size_hint=(None, None), size=(200, 100))
                 popup.open()
         else:
             popup = Popup(title='¡Error!',
-                          content=Label(text='Perceptron Sin Entrenar.'),
+                          content=Label(text='Untrained perceptron.'),
                           size_hint=(None, None), size=(200, 100))
             popup.open()
     #(La funcion que dibuja las lineas del plano)
     def set_lines(self):
+        with self.canvas.after:
+            Color(1,1,1,1, mode ='rbg')
+            Rectangle(pos = (0,0), size=(800,600), source= "Img/b2.png")
         with self.canvas:
             cont=0
             for x in range(10):
@@ -218,7 +226,7 @@ class mainMenu(FloatLayout):
         self.anima = True
         self.vuelta = 0
 
-    def get_data(self, lrn, mx, es):
+    def get_data(self, lrn, mx, es, ep):
         #limpiar lineas si hay
         self.soft_reset()
         if(len(self.Entry_x)>0):
@@ -244,6 +252,13 @@ class mainMenu(FloatLayout):
                 es.text = "Non Linear"
             else:
                 es.text = "Trained!"
+                ep.text = "Number of Epochs: "+str(self.perceptron.epochs)
+        else:
+            popup = Popup(title='¡Error!',
+                          content=Label(text='You need at least one entry to train '),
+                          size_hint=(None, None), size=(300, 100))
+            popup.open()
+
 
 class PerceptronApp(App):
     def build(self):
