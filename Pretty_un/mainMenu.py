@@ -1,5 +1,9 @@
+import threading
+
+import time
 from kivy.config import Config
 #Esta linea es para impedir una función automática que tiene con el click derecho
+from kivy.graphics.instructions import Callback
 from kivy.properties import ObjectProperty
 
 Config.set('input', 'mouse', 'mouse,multitouch_on_demand')
@@ -35,6 +39,29 @@ class mainMenu(FloatLayout):
             self.set_lines()
         self.Entry_x.clear()
         self.Wish_y.clear()
+        self.perceptron = None
+
+    def soft_reset(self):
+        self.perceptron = None
+        #solo limpia las lineas deja de nuevo los puntos
+        with self.canvas:
+            Color(1, 1, 1, 1, mode='rbg')
+            Rectangle(pos=(42, 550 - 370), size=(370, 370), source="Img/back2.jpg")
+            self.set_lines()
+            for i in range(0, len(self.Wish_y)):
+                if self.Wish_y[i] == 0:
+                    s = "Img/fa.png"
+                else:
+                    s = "Img/tu.png"
+                Color(1, 1, 1, mode='rgv')
+                OldRangex = (5 - (-5))
+                NewRangex = (412 - (412 - 370))
+                NewValuex = round((((self.Entry_x[i][1] - (-5)) * NewRangex) / OldRangex) + (412 - 370), 1)
+                OldRangey = (5 - (-5))
+                NewRangey = ((180 + 370) - 180)
+                NewValuey = round((((self.Entry_x[i][2] - (-5)) * NewRangey) / OldRangey) + 180, 1)
+
+                Rectangle(pos=(NewValuex - 12, NewValuey - 12), size=(25, 25), source=s, group="dot")
 
     #Agrega la entrada a la lista junto con la deseada *pasa el rango a (-5 a 5)*
     def add_to_entry(self, x, y, d):
@@ -51,6 +78,44 @@ class mainMenu(FloatLayout):
     #(Referencia) para saber que todom se registro bien borrar luego O.o por que se puso azul?
     def pr_f(self):
         print(self.Entry_x)
+
+    def draw_um(self):
+        self.draw_w(self.perceptron.time_weights[0],[1,0,0])
+        for i in range(1,len(self.perceptron.time_weights)-1):
+            time.sleep(0.5)
+            self.draw_w(self.perceptron.time_weights[i], [0, 0, 1])
+        self.draw_w(self.perceptron.time_weights[len(self.perceptron.time_weights)-1], [0, 1, 0])
+
+    def draw_w(self,w, c):
+        with self.canvas:
+            Color(c[0], c[1], c[2], 1.0, mode='rgb')
+            m = -(w[0]/w[2])/(w[0]/w[1])
+            b = -w[0]/w[2]
+            xi = -5
+            yi = m*xi+b
+            if yi > 5:
+                yi = 5
+                xi = (yi - b)/m
+            elif yi < -5:
+                yi = -5
+                xi = (yi - b) / m
+            xf = 5
+            yf = m*xf+b
+            if yf > 5:
+                yf = 5
+                xf = (yf - b) / m
+            elif yf < -5:
+                yf = -5
+                xf = (yf - b) / m
+            OldRangex = (5 - (-5))
+            NewRangex = (412 - (412 - 370))
+            NewValuexi = round((((xi - (-5)) * NewRangex) / OldRangex) + (412 - 370), 1)
+            NewValuexf = round((((xf - (-5)) * NewRangex) / OldRangex) + (412 - 370), 1)
+            OldRangey = (5 - (-5))
+            NewRangey = ((180 + 370) - 180)
+            NewValueyi = round((((yi - (-5)) * NewRangey) / OldRangey) + 180, 1)
+            NewValueyf = round((((yf - (-5)) * NewRangey) / OldRangey) + 180, 1)
+            Line(points=(NewValuexi, NewValueyi, NewValuexf, NewValueyf), width=1.2)
 
     #(La funcion que dibuja las lineas del plano)
     def set_lines(self):
@@ -85,20 +150,25 @@ class mainMenu(FloatLayout):
     #cuando se da clic en entrenar
     def start_training(self, lr, me):
         self.perceptron = Perceptron(lr,me,self.Entry_x,self.Wish_y,self)
-        print("Pesos: ")
-        print(self.perceptron.weights)
+        self.draw_um()
 
     def get_data(self, lrn, mx, es):
+        #limpiar lineas si hay
+        self.soft_reset()
         lr = self.Learning_rate
         me = self.Max_epochs
         if lrn.text != "":
             try:
                 lr = float(lrn.text)
+                if lr < 0.1 or lr > 0.9:
+                    lr = 0.1
             except ValueError:
                 print("No es Flotante")
         if mx.text != "":
             try:
                 me = int(mx.text)
+                if me < 1:
+                    me = 100
             except ValueError:
                 print("No es Entero")
         es.text = "Training..."
