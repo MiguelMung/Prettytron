@@ -232,6 +232,7 @@ class mainMenu(FloatLayout):
                     lr = float(lrn.text)
                     if lr < 0.1 or lr > 0.9:
                         lr = 0.1
+                        lrn.text=str(lr)
                 except ValueError:
                     print("No es Flotante")
             if mx.text != "":
@@ -239,6 +240,7 @@ class mainMenu(FloatLayout):
                     me = int(mx.text)
                     if me < 1:
                         me = 100
+                        mx.text=str(me)
                 except ValueError:
                     print("No es Entero")
             es.text = "Training..."
