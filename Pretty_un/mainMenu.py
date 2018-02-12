@@ -120,10 +120,11 @@ class mainMenu(FloatLayout):
             yi = m * xi + b
             if yi > 5:
                 yi = 5
-                xi = (b-yi) / (-m)
+                xi = (yi-b) / (-m)
             elif yi < -5:
                 yi = -5
                 xi = (b-yi) / (-m)
+
             if xi < 0 and yi < 0:
                 yi += b
             xf = 5

@@ -1,11 +1,8 @@
 import random
 
-from numpy.ma import dot
-
-
 class Perceptron:
     #constructor
-    def __init__(self,lr,me,x,y,window):
+    def __init__(self,lr,me,x,y):
         self.learning_rate = lr
         self.max_epochs = me
         self.epochs = 0
@@ -14,22 +11,19 @@ class Perceptron:
         self.weights = []
         self.time_weights = []
         self.nonlinear = False
-        self.start(window)
+        self.start()
 
     #funcion de transferencia
     def Pw(self,x):
         pw = 0
         wx = 0.0
-        re = dot(self.weights, x)
-
-        '''for i in range(0, len(self.weights)):
+        for i in range(0, len(self.weights)):
             wx += self.weights[i]*x[i]
-                #umbral
-        print(pw)'''
 
-        if re >= 0:
+        if wx >= 0:
             pw = 1
         return pw
+
     #clasifica un nuevo set de puntos solo despues de ser entrenado
     def clasify(self, new_points):
         clases = []
@@ -41,7 +35,7 @@ class Perceptron:
     def set_time(self, a,b,c):
         self.time_weights.append((a,b,c))
 
-    def start(self, window):
+    def start(self):
         #inicializando los pesos con valores random entre -5 y 5
         self.weights = []
         for i in self.entries[0]:
@@ -54,7 +48,7 @@ class Perceptron:
         while(not done and self.epochs < self.max_epochs):
             done = True
             self.set_time(self.weights[0],self.weights[1],self.weights[2])
-            for i in range(0,len(self.entries)):
+            for i in range(0, len(self.entries)):
                 #obteniendo el error
                 error = self.desired[i] - self.Pw(self.entries[i])
                 if error != 0:

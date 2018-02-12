@@ -6,16 +6,13 @@ from kivy.graphics import Color
 from kivy.uix.label import Label
 from kivy.uix.popup import Popup
 from kivy.core.window import Window
-from Pretty_deux.Perceptron import *
-from kivy.properties import ObjectProperty
+from Pretty_deux.Adaline import *
 from kivy.uix.floatlayout import FloatLayout
 from kivy.graphics.vertex_instructions import Rectangle, Line
 
 ###---------PreConfig---------###
 Window.size = (800, 600)
 Config.set('input', 'mouse', 'mouse,multitouch_on_demand')
-
-
 
 class mainMenu(FloatLayout):
     CH_class = 0            #Clase actual
@@ -24,18 +21,18 @@ class mainMenu(FloatLayout):
     Entry_x = []            #Listado de entradas de entrenamiento
     Entry_test =[]          #Listado de entradas de prueba
     Wish_y =[]              #Listado de labels o clase deseada
-    perceptron = None
+    adaline = None          #declarando el adaline
     anima = False           #Animacion Encendida
     vuelta = 0              #Vuelta de la animacion
 
 
-    #Constructor
+    # Constructor
     def __init__(self, **kwargs):
         super(mainMenu, self).__init__(**kwargs)
         #Crea las lineas del plano
         self.set_lines()
 
-    #Limpia el plano y la variable de Entry_x y Wish_y
+    # Limpia el plano y la variable de Entry_x y Wish_y
     def reset(self):
 
         with self.canvas:
@@ -45,12 +42,12 @@ class mainMenu(FloatLayout):
         self.Entry_x.clear()
         self.Wish_y.clear()
         self.Entry_test.clear()
-        self.perceptron = None
+        self.adaline = None
         self.anima = False
 
     def soft_reset(self,sec):
         if sec:
-            self.perceptron = None
+            self.adaline = None
         #solo limpia las lineas deja de nuevo los puntos
         with self.canvas:
             Color(1, 1, 1, 1, mode='rbg')
@@ -70,7 +67,7 @@ class mainMenu(FloatLayout):
                 NewValuey = round((((self.Entry_x[i][2] - (-5)) * NewRangey) / OldRangey) + 180, 1)
                 Rectangle(pos=(NewValuex - 12, NewValuey - 12), size=(20, 20), source=s, group="dot")
 
-    #Agrega la entrada a la lista junto con la deseada *pasa el rango a (-5 a 5)*
+    # Agrega la entrada a la lista junto con la deseada *pasa el rango a (-5 a 5)*
     def add_to_entry(self, x, y, d):
         OldRangex = (412 - (412-370))
         NewRangex = (5 - (-5))
@@ -85,33 +82,28 @@ class mainMenu(FloatLayout):
             self.Entry_x.append((-1.0, float(NewValuex), float(NewValuey)))
             self.Wish_y.append(d)
 
-    #(Referencia) para saber que todom se registro bien borrar luego O.o por que se puso azul?
+    # (Referencia) para saber que todom se registro bien borrar luego O.o por que se puso azul?
     def pr_f(self):
         print(self.Entry_x)
         print(self.Wish_y)
 
     ########################################
     ##------------Animacion---------------##
-    def draw_umbral(self,*args):
+    def draw_umbral(self, *args):
         if self.anima:
-            tam= len(self.perceptron.time_weights)
+            tam = len(self.adaline.time_weights)
             self.soft_reset(False)
-            if tam>0:
-
-                self.draw_w(self.perceptron.time_weights[0], [1, 0, 0])
-                if self.vuelta >0 and self.vuelta<(tam-1) :
-                    self.draw_w(self.perceptron.time_weights[self.vuelta], [0, 0, 1])
+            if tam > 0:
+                self.draw_w(self.adaline.time_weights[0], [1, 0, 0])
+                if 0 < self.vuelta < (tam - 1):
+                    self.draw_w(self.adaline.time_weights[self.vuelta], [0, 0, 1])
                 elif self.vuelta >= tam:
-                    self.draw_w(self.perceptron.time_weights[len(self.perceptron.time_weights) - 1], [0, 1, 0])
-                    self.anima=False
+                    self.draw_w(self.adaline.time_weights[len(self.adaline.time_weights) - 1], [0, 1, 0])
+                    self.anima = False
             self.vuelta += 1
     ########################################
 
-
-
-
-
-    def draw_w(self,w, c):
+    def draw_w(self, w, c):
         with self.canvas:
             Color(c[0], c[1], c[2], 1.0, mode='rgb')
             m = -(w[0]/w[2])/(w[0]/w[1])
@@ -124,8 +116,6 @@ class mainMenu(FloatLayout):
             elif yi < -5:
                 yi = -5
                 xi = (b-yi) / (-m)
-            #if xi < 0 and yi < 0:
-             #   yi += b
             xf = 5
             yf = m*xf+b
             if yf > 5:
@@ -134,8 +124,6 @@ class mainMenu(FloatLayout):
             elif yf < -5:
                 yf = -5
                 xf = (b-yf) / (-m)
-            #if xf < 0 and yf < 0:
-             #   yf += b
             OldRangex = (5 - (-5))
             NewRangex = (412 - (412 - 370))
             NewValuexi = round((((xi - (-5)) * NewRangex) / OldRangex) + (412 - 370), 1)
@@ -163,24 +151,24 @@ class mainMenu(FloatLayout):
             Rectangle(pos=(NewValuex - 12, NewValuey - 12), size=(26, 26), source=s, group="dot")
 
     def test(self):
-        if self.perceptron != None:
-            clases = self.perceptron.clasify(self.Entry_test)
+        if self.adaline is not None:
+            clases = self.adaline.clasify(self.Entry_test)
             if len(clases) != 0:
                 i = 0
                 for c in clases:
-                    self.change_image(c,i)
+                    self.change_image(c, i)
                     i += 1
             else:
                 popup = Popup(title='¡Error!',
-                              content=Label(text='Untrained perceptron.'),
+                              content=Label(text='No new entries.'),
                               size_hint=(None, None), size=(200, 100))
                 popup.open()
         else:
             popup = Popup(title='¡Error!',
-                          content=Label(text='Untrained perceptron.'),
+                          content=Label(text='Untrained Adaline.'),
                           size_hint=(None, None), size=(200, 100))
             popup.open()
-    #(La funcion que dibuja las lineas del plano)
+    # (La funcion que dibuja las lineas del plano)
     def set_lines(self):
         with self.canvas.after:
             Color(1,1,1,1, mode ='rbg')
@@ -197,11 +185,10 @@ class mainMenu(FloatLayout):
         Line(points= (43 + 185, 550, 43 + 185, 184),width= 1.2)
         Line(points= (43, 550 - 185, 43 + 370, 550 - 185),width= 1.2)
 
-    #La funcion del click
+    # La funcion del click
     def on_touch_up(self, touch):
-        #Si fue en el plano
-        if(touch.pos[0]>42 and touch.pos[0]<43+370 and touch.pos[1]<550 and touch.pos[1]>180):
-
+        # Si fue en el plano
+        if 42 < touch.pos[0] < 43+370 and 550 > touch.pos[1] > 180:
             with self.canvas:
                 if self.CH_class ==0:
                     nclass=0
@@ -214,18 +201,18 @@ class mainMenu(FloatLayout):
                     s = "Img/te.png"
                 Color(1, 1, 1, mode='rgv')
                 Rectangle(pos=(touch.pos[0] - 12, touch.pos[1] - 12), size=(20, 20), source=s, group="dot")
-            self.add_to_entry(touch.pos[0], touch.pos[1],nclass)
+            self.add_to_entry(touch.pos[0], touch.pos[1], nclass)
 
     #cuando se da clic en entrenar
-    def start_training(self, lr, me):
-        self.perceptron = Perceptron(lr,me,self.Entry_x,self.Wish_y,self)
+    def start_training(self, lr, me, de):
+        self.adaline = Adaline(lr, me, self.Entry_x, self.Wish_y, de)
         self.anima = True
         self.vuelta = 0
-
+    #TODO agregar que tome los datos del error deseado
     def get_data(self, lrn, mx, es, ep):
         #limpiar lineas si hay
         self.soft_reset(True)
-        if(len(self.Entry_x)>0):
+        if(len(self.Entry_x) > 0):
             lr = self.Learning_rate
             me = self.Max_epochs
             if lrn.text != "":
@@ -235,22 +222,22 @@ class mainMenu(FloatLayout):
                         lr = 0.1
                         lrn.text=str(lr)
                 except ValueError:
-                    print("No es Flotante")
+                    print("Not Float")
             if mx.text != "":
                 try:
                     me = int(mx.text)
                     if me < 1:
                         me = 100
-                        mx.text=str(me)
+                        mx.text = str(me)
                 except ValueError:
-                    print("No es Entero")
+                    print("Not Integer")
             es.text = "Training..."
-            self.start_training(lr,me)
-            if self.perceptron.nonlinear:
-                es.text = "Non Linear"
+            self.start_training(lr, me, 0.01)
+            if self.adaline.nonlinear:
+                es.text = "Reached Max. Epochs"
             else:
                 es.text = "Trained!"
-                ep.text = "Number of Epochs: "+str(self.perceptron.epochs)
+            ep.text = "Number of Epochs: "+str(self.adaline.epochs)
         else:
             popup = Popup(title='¡Error!',
                           content=Label(text='You need at least one entry to train '),
@@ -258,11 +245,11 @@ class mainMenu(FloatLayout):
             popup.open()
 
 
-class PerceptronApp(App):
+class AdalineApp(App):
     def build(self):
         menu = mainMenu()
         Clock.schedule_interval(menu.draw_umbral, 0.2)
         return menu
 
 
-PerceptronApp().run()
+AdalineApp().run()
