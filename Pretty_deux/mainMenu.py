@@ -144,6 +144,7 @@ class mainMenu(FloatLayout):
             NewValueyf = round((((yf - (-5)) * NewRangey) / OldRangey) + 180, 1)
             Line(points=(NewValuexi, NewValueyi, NewValuexf, NewValueyf), width=.7)
 
+#
     def change_image(self, c, i):
         with self.canvas:
             if c == 0:
