@@ -68,7 +68,7 @@ class mainMenu(FloatLayout):
                 OldRangey = (5 - (-5))
                 NewRangey = ((180 + 370) - 180)
                 NewValuey = round((((self.Entry_x[i][2] - (-5)) * NewRangey) / OldRangey) + 180, 1)
-                Rectangle(pos=(NewValuex - 12, NewValuey - 12), size=(25, 25), source=s, group="dot")
+                Rectangle(pos=(NewValuex - 12, NewValuey - 12), size=(20, 20), source=s, group="dot")
 
     #Agrega la entrada a la lista junto con la deseada *pasa el rango a (-5 a 5)*
     def add_to_entry(self, x, y, d):
@@ -88,15 +88,15 @@ class mainMenu(FloatLayout):
     #(Referencia) para saber que todom se registro bien borrar luego O.o por que se puso azul?
     def pr_f(self):
         print(self.Entry_x)
+        print(self.Wish_y)
 
     ########################################
     ##------------Animacion---------------##
     def draw_umbral(self,*args):
-        self.soft_reset(False)
         if self.anima:
             tam= len(self.perceptron.time_weights)
             if tam>0:
-
+                self.soft_reset(False)
                 self.draw_w(self.perceptron.time_weights[0], [1, 0, 0])
                 if self.vuelta >0 and self.vuelta<(tam-1) :
                     self.draw_w(self.perceptron.time_weights[self.vuelta], [0, 0, 1])
@@ -122,8 +122,8 @@ class mainMenu(FloatLayout):
             elif yi < -5:
                 yi = -5
                 xi = (b-yi) / (-m)
-            if xi < 0 and yi < 0:
-                yi += b
+            #if xi < 0 and yi < 0:
+             #   yi += b
             xf = 5
             yf = m*xf+b
             if yf > 5:
@@ -132,8 +132,8 @@ class mainMenu(FloatLayout):
             elif yf < -5:
                 yf = -5
                 xf = (b-yf) / (-m)
-            if xf < 0 and yf < 0:
-                yf += b
+            #if xf < 0 and yf < 0:
+             #   yf += b
             OldRangex = (5 - (-5))
             NewRangex = (412 - (412 - 370))
             NewValuexi = round((((xi - (-5)) * NewRangex) / OldRangex) + (412 - 370), 1)
@@ -211,7 +211,7 @@ class mainMenu(FloatLayout):
                     nclass = 3
                     s = "Img/te.png"
                 Color(1, 1, 1, mode='rgv')
-                Rectangle(pos=(touch.pos[0] - 12, touch.pos[1] - 12), size=(25, 25), source=s, group="dot")
+                Rectangle(pos=(touch.pos[0] - 12, touch.pos[1] - 12), size=(20, 20), source=s, group="dot")
             self.add_to_entry(touch.pos[0], touch.pos[1],nclass)
 
     #cuando se da clic en entrenar

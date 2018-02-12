@@ -1,5 +1,8 @@
 import random
 
+from numpy.ma import dot
+
+
 class Perceptron:
     #constructor
     def __init__(self,lr,me,x,y,window):
@@ -17,10 +20,14 @@ class Perceptron:
     def Pw(self,x):
         pw = 0
         wx = 0.0
-        for i in range(0, len(self.weights)):
+        re = dot(self.weights, x)
+
+        '''for i in range(0, len(self.weights)):
             wx += self.weights[i]*x[i]
                 #umbral
-        if wx >= self.weights[0]:
+        print(pw)'''
+
+        if re >= 0:
             pw = 1
         return pw
     #clasifica un nuevo set de puntos solo despues de ser entrenado
