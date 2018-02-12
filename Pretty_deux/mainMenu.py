@@ -1,41 +1,32 @@
-import threading
-
-import time
-from kivy.config import Config
-#Esta linea es para impedir una función automática que tiene con el click derecho
-from kivy.graphics.instructions import Callback
-from kivy.properties import ObjectProperty, ListProperty
-from kivy.uix.label import Label
-from kivy.uix.popup import Popup
-from kivy.uix.widget import Widget
-
-Config.set('input', 'mouse', 'mouse,multitouch_on_demand')
+###---------Imports---------###
 from kivy.app import App
 from kivy.clock import Clock
-from kivy.animation import Animation
-from kivy.core.window import Window
+from kivy.config import Config
 from kivy.graphics import Color
-from kivy.graphics.vertex_instructions import Rectangle, Line
+from kivy.uix.label import Label
+from kivy.uix.popup import Popup
+from kivy.core.window import Window
+from Pretty_deux.Perceptron import *
+from kivy.properties import ObjectProperty
 from kivy.uix.floatlayout import FloatLayout
-from Pretty_un.Perceptron import *
-##
-#Establece el tamaño de la pantalla--- un poco obvio
+from kivy.graphics.vertex_instructions import Rectangle, Line
+
+###---------PreConfig---------###
 Window.size = (800, 600)
+Config.set('input', 'mouse', 'mouse,multitouch_on_demand')
 
 
 
 class mainMenu(FloatLayout):
-    CH_class = 0         #Si es true es clase uno si false clase dos
-    Learning_rate=0.1
-    Max_epochs=100
-    Entry_x = []            #Listado de entradas
-    Entry_test =[]
-    Wish_y =[]    #Listado de labels o clase deseada
-    button_train = ObjectProperty(None)
+    CH_class = 0            #Clase actual
+    Learning_rate=0.1       #Learnig Rate
+    Max_epochs=100          #Numero Maximo de epocas
+    Entry_x = []            #Listado de entradas de entrenamiento
+    Entry_test =[]          #Listado de entradas de prueba
+    Wish_y =[]              #Listado de labels o clase deseada
     perceptron = None
-    anima = False
-    vuelta = 0
-
+    anima = False           #Animacion Encendida
+    vuelta = 0              #Vuelta de la animacion
 
 
     #Constructor
@@ -57,8 +48,9 @@ class mainMenu(FloatLayout):
         self.perceptron = None
         self.anima = False
 
-    def soft_reset(self):
-        self.perceptron = None
+    def soft_reset(self,sec):
+        if sec:
+            self.perceptron = None
         #solo limpia las lineas deja de nuevo los puntos
         with self.canvas:
             Color(1, 1, 1, 1, mode='rbg')
@@ -97,18 +89,24 @@ class mainMenu(FloatLayout):
     def pr_f(self):
         print(self.Entry_x)
 
-    def draw_um(self,*args):
-
+    ########################################
+    ##------------Animacion---------------##
+    def draw_umbral(self,*args):
+        self.soft_reset(False)
         if self.anima:
-            tam = len(self.perceptron.time_weights)
+            tam= len(self.perceptron.time_weights)
             if tam>0:
-                if self.vuelta ==0:
-                    self.draw_w(self.perceptron.time_weights[0],[1,0,0])
-                elif self.vuelta >0 and self.vuelta<(tam-1) :
+
+                self.draw_w(self.perceptron.time_weights[0], [1, 0, 0])
+                if self.vuelta >0 and self.vuelta<(tam-1) :
                     self.draw_w(self.perceptron.time_weights[self.vuelta], [0, 0, 1])
-                elif self.vuelta == tam:
-                    self.draw_w(self.perceptron.time_weights[len(self.perceptron.time_weights)-1], [0, 1, 0])
-            self.vuelta+=1
+                elif self.vuelta >= tam:
+                    self.draw_w(self.perceptron.time_weights[len(self.perceptron.time_weights) - 1], [0, 1, 0])
+            self.vuelta += 1
+    ########################################
+
+
+
 
 
     def draw_w(self,w, c):
@@ -144,7 +142,7 @@ class mainMenu(FloatLayout):
             NewRangey = ((180 + 370) - 180)
             NewValueyi = round((((yi - (-5)) * NewRangey) / OldRangey) + 180, 1)
             NewValueyf = round((((yf - (-5)) * NewRangey) / OldRangey) + 180, 1)
-            Line(points=(NewValuexi, NewValueyi, NewValuexf, NewValueyf), width=1.2)
+            Line(points=(NewValuexi, NewValueyi, NewValuexf, NewValueyf), width=.7)
 
     def change_image(self, c, i):
         with self.canvas:
@@ -223,7 +221,7 @@ class mainMenu(FloatLayout):
 
     def get_data(self, lrn, mx, es, ep):
         #limpiar lineas si hay
-        self.soft_reset()
+        self.soft_reset(True)
         if(len(self.Entry_x)>0):
             lr = self.Learning_rate
             me = self.Max_epochs
@@ -260,7 +258,7 @@ class mainMenu(FloatLayout):
 class PerceptronApp(App):
     def build(self):
         menu = mainMenu()
-        Clock.schedule_interval(menu.draw_um, 0.2)
+        Clock.schedule_interval(menu.draw_umbral, 0.2)
         return menu
 
 

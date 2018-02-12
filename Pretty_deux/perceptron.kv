@@ -17,7 +17,7 @@
                 size_hint_x: None
                 size_hint_x: .04
                 id: dumy
-                on_press: root.pr_f()
+                on_press: root.soft_reset(False)
             Label:
                 color: 1,0,1,1
                 text:"Plane"
@@ -55,7 +55,7 @@
                     height: "20dp"
 
                 Label:
-                    id: lab
+                    id: plane
                     text: "hello"
                     size_hint_y: None
                     size_hint_x: None
