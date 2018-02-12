@@ -95,13 +95,15 @@ class mainMenu(FloatLayout):
     def draw_umbral(self,*args):
         if self.anima:
             tam= len(self.perceptron.time_weights)
+            self.soft_reset(False)
             if tam>0:
-                self.soft_reset(False)
+
                 self.draw_w(self.perceptron.time_weights[0], [1, 0, 0])
                 if self.vuelta >0 and self.vuelta<(tam-1) :
                     self.draw_w(self.perceptron.time_weights[self.vuelta], [0, 0, 1])
                 elif self.vuelta >= tam:
                     self.draw_w(self.perceptron.time_weights[len(self.perceptron.time_weights) - 1], [0, 1, 0])
+                    self.anima=False
             self.vuelta += 1
     ########################################
 
