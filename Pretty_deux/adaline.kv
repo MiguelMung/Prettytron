@@ -34,19 +34,7 @@
 
                 orientation: 'vertical'
                 size_hint_x: 1.4
-                canvas:
-                    Rectangle:
-                        pos: (30,80)
-                        size: (130,90)
-                        source: "Img/fa.jpg"
-                    Rectangle:
-                        pos: (44,125)
-                        size: (20,20)
-                        source: "Img/fa.png"
-                    Rectangle:
-                        pos: (44,100)
-                        size: (20,20)
-                        source: "Img/tu.png"
+
 
 
                 Label:
@@ -85,17 +73,37 @@
                             width: 1.2
                 Label:
                     id: lab
-                    size_hint_y: None
-                    height: "10dp"
+                    size_hint_y: .04
+
                 BoxLayout:
                     pos_hint_y: None
                     size_hint_x: .89
-                    size_hint_y: 0.2
+                    size_hint_y: 0.1
                     Label:
-                        color: 1,0,1,1
-                        size_hint_x: .2
-                        halign: 'left'
-                        text: "Class:"
+                        size_hint_x: .08
+
+
+                    ToggleButton:
+                        pos_hint_y: None
+                        group: "chclass"
+                        size_hint_x: .15
+
+
+                        pos_hint: {"x": 0.8, 'y': 0}
+                        text: "Class1"
+                        id: cl1
+                        state: 'down'
+                        on_release: root.CH_class = 0
+
+                    ToggleButton:
+                        pos_hint: {"x": 0.6, 'y': 0}
+                        group: "chclass"
+                        size_hint_x: .15
+
+
+                        text: "Class2"
+                        id: cl2
+                        on_release: root.CH_class = 1
                     Label:
                         size_hint_x: .3
                         halign: 'left'
@@ -105,39 +113,34 @@
                         size_hint_x: .15
                         text: "Reset"
                         on_press: root.reset()
+                Label:
+                    size_hint_y: .1
 
-                BoxLayout:
-                    BoxLayout:
-                        size_hint_x: .6
-                        size_hint_y: 1
-                        pading: 1
+                Label:
+                    id: plane
+                    size_hint_y: .5
+                    size_hint_x: None
+                    pos_hint: {"x": 0.09, 'y': 0}
+                    height: "100dp"
+                    width:  "370dp"
+                    canvas:
+                        Color:
+                            rgba: 1, 0, 1, .8
+                        Line:
+                            width: 2.
+                            rectangle: (self.x, self.y, self.width, self.height)
+                        Color:
+                            rgba: 1, 1, 1, 1
+                        Rectangle:
+                            pos: self.pos
+                            size: self.size
 
-                        orientation: 'vertical'
-                        ToggleButton:
-                            pos_hint_y: None
-                            group: "chclass"
-                            size_hint_x: .4
-                            size_hint_y: .05
-                            pos_hint: {"x": 0.42, 'y': 0}
-                            text: "Class1"
-                            id: cl1
-                            state: 'down'
-                            on_release: root.CH_class = 0
+                Label:
+                    size_hint_y: .1
+                    color: 1,0,1,1
+                    text:"Number of Epochs"
 
-                        ToggleButton:
-                            pos_hint: {"x": 0.42, 'y': 0}
-                            group: "chclass"
-                            size_hint_x: .4
-                            size_hint_y: .05
-                            text: "Class2"
-                            id: cl2
-                            on_release: root.CH_class = 1
-                        Label:
-                            size_hint_y: .18
 
-                    BoxLayout:
-
-                        Label:
             BoxLayout:
                 spacing:20
                 orientation: 'vertical'
@@ -189,6 +192,7 @@
 
 
 
+
                 Button:
                     size_hint_y: .1
                     size_hint_x: .3
@@ -227,14 +231,13 @@
                     size_hint_y: .2
 
                 ToggleButton:
+
                     text:"New dot"
                     size_hint_y: .1
                     size_hint_x: .3
                     pos_hint:{"x": 0.35, 'y':0}
                     group: "chclass"
                     on_release: root.CH_class = 3
-
-
 
 
                 Button:
@@ -282,4 +285,11 @@
         size_hint_x: None
         pos_hint: {"x": 0.47, 'y': 0.52}
         text: "x: 5"
+        font_size: 15
+    Label:
+        color: 1,0,1,1
+        size_hint_y: None
+        size_hint_x: None
+        pos_hint: {"x": -0.03, 'y': 0.04}
+        text: "Ea"
         font_size: 15

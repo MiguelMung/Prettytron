@@ -177,9 +177,6 @@ class mainMenu(FloatLayout):
             popup.open()
     # (La funcion que dibuja las lineas del plano)
     def set_lines(self):
-        with self.canvas.after:
-            Color(1,1,1,1, mode ='rbg')
-            Rectangle(pos = (0,0), size=(800,600), source= "Img/b2.png")
         with self.canvas:
             cont=0
             for x in range(10):
