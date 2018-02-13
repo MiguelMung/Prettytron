@@ -14,6 +14,7 @@ class Adaline:
         self.desired = y
         self.weights = []
         self.time_weights = []
+        self.time_errors = []
         self.nonlinear = False
         self.start()
 
@@ -49,6 +50,9 @@ class Adaline:
     def set_time(self, a, b, c):
         self.time_weights.append((a, b, c))
 
+    def set_error(self,e):
+        self.time_errors.append(e)
+
     def start(self):
         # inicializando los pesos con valores random entre -5 y 5
         self.weights = []
@@ -63,7 +67,6 @@ class Adaline:
         while (self.error != self.desired_error and self.epochs < self.max_epochs):
             self.set_time(self.weights[0], self.weights[1], self.weights[2])
             errAcumulado = 0
-
             for i in range(0, len(self.entries)):
                 # obteniendo el error
                 y = self.wx(self.entries[i])
@@ -75,6 +78,7 @@ class Adaline:
                         self.weights[j] = self.weights[j] + self.incW(error, y, self.entries[i][j])
 
             self.error = errAcumulado/len(self.entries)
+            self.set_error(self.error)
             self.epochs += 1
         print("Pesos Finales:")
         print(self.weights)

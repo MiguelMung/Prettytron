@@ -7,8 +7,9 @@ from kivy.uix.label import Label
 from kivy.uix.popup import Popup
 from kivy.core.window import Window
 from Pretty_deux.Adaline import *
+from Pretty_deux.Perceptron import *
 from kivy.uix.floatlayout import FloatLayout
-from kivy.graphics.vertex_instructions import Rectangle, Line
+from kivy.graphics.vertex_instructions import Rectangle, Line, Point
 
 ###---------PreConfig---------###
 Window.size = (800, 600)
@@ -24,6 +25,7 @@ class mainMenu(FloatLayout):
     adaline = None          #declarando el adaline
     anima = False           #Animacion Encendida
     vuelta = 0              #Vuelta de la animacion
+    ada = True              #Define si usar el adaline o el perceptron
 
 
     # Constructor
@@ -86,6 +88,11 @@ class mainMenu(FloatLayout):
     def pr_f(self):
         print(self.Entry_x)
         print(self.Wish_y)
+    #graficar error
+    def draw_error(self, e, t):
+        with self.canvas:
+            Color(1, 0, 0, 1.0, mode='rgb')
+            #dibujar el puntito
 
     ########################################
     ##------------Animacion---------------##
@@ -205,7 +212,10 @@ class mainMenu(FloatLayout):
 
     #cuando se da clic en entrenar
     def start_training(self, lr, me, de):
-        self.adaline = Adaline(lr, me, self.Entry_x, self.Wish_y, de)
+        if self.ada:
+            self.adaline = Adaline(lr, me, self.Entry_x, self.Wish_y, de)
+        else:
+            self.adaline = Perceptron(lr, me, self.Entry_x, self.Wish_y)
         self.anima = True
         self.vuelta = 0
     #TODO agregar que tome los datos del error deseado
@@ -218,7 +228,7 @@ class mainMenu(FloatLayout):
             if lrn.text != "":
                 try:
                     lr = float(lrn.text)
-                    if lr < 0.1 or lr > 0.9:
+                    if lr <= 0.0:
                         lr = 0.1
                         lrn.text=str(lr)
                 except ValueError:
