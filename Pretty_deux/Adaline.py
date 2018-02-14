@@ -78,7 +78,7 @@ class Adaline:
                         self.weights[j] = self.weights[j] + self.incW(error, y, self.entries[i][j])
 
             self.error = errAcumulado/len(self.entries)
-            self.set_error(self.error)
+            self.set_error(errAcumulado)
             self.epochs += 1
         print("Pesos Finales:")
         print(self.weights)

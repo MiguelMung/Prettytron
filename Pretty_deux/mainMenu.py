@@ -2,7 +2,7 @@
 from kivy.app import App
 from kivy.clock import Clock
 from kivy.config import Config
-from kivy.graphics import Color
+from kivy.graphics import Color, Ellipse
 from kivy.uix.label import Label
 from kivy.uix.popup import Popup
 from kivy.core.window import Window
@@ -34,6 +34,7 @@ class mainMenu(FloatLayout):
         super(mainMenu, self).__init__(**kwargs)
         #Crea las lineas del plano
         self.set_lines()
+        self.set_other_lines()
 
     # Limpia el plano y la variable de Entry_x y Wish_y
     def reset(self):
@@ -42,13 +43,20 @@ class mainMenu(FloatLayout):
             Color(1, 1, 1, 1, mode='rbg')
             Rectangle(pos =(42,550-370), size =(370,370), source= "Img/back2.jpg")
             self.set_lines()
+            self.set_other_lines()
         self.Entry_x.clear()
         self.Wish_y.clear()
         self.Entry_test.clear()
         self.adaline = None
         self.anima = False
 
-    def soft_reset(self,sec):
+    def reset_graph(self):
+        with self.canvas:
+            Color(1, 1, 1, 1, mode='rbg')
+            Rectangle(pos=(40, 121 - 100), size=(370, 100), source="Img/back2.jpg")
+            self.set_other_lines()
+
+    def soft_reset(self, sec):
         if sec:
             self.adaline = None
         #solo limpia las lineas deja de nuevo los puntos
@@ -89,11 +97,23 @@ class mainMenu(FloatLayout):
     def pr_f(self):
         print(self.Entry_x)
         print(self.Wish_y)
+
     #graficar error
-    def draw_error(self, e, t):
+    def draw_error(self, e, t, n):
         with self.canvas:
-            Color(1, 0, 0, 1.0, mode='rgb')
-            #dibujar el puntito
+            #40,21 100,370
+            Color(0, 0, 1, 1.0, mode='rgb')
+            x = t
+            y = e
+            d = 2
+            OldRangeX = ((n-1) - 0)
+            NewRangeX = (410 - (410 - 370))
+            NewValueX = round((((x - 0) * NewRangeX) / OldRangeX) + (410 - 370), 1)
+            OldRangeY = (5 - (-5))
+            NewRangeY = ((21 + 100) - 21)
+            NewValueY = round((((y - (-5)) * NewRangeY) / OldRangeY) + 21, 1)
+            Ellipse(pos=(NewValueX - d/2, NewValueY -d/2), size=(d, d))
+            #Line(circle=(NewValueX, NewValueY, 2))
 
     ########################################
     ##------------Animacion---------------##
@@ -108,6 +128,10 @@ class mainMenu(FloatLayout):
                 elif self.vuelta >= tam:
                     self.draw_w(self.adaline.time_weights[len(self.adaline.time_weights) - 1], [0, 1, 0])
                     self.anima = False
+            #graficando el error en adaline
+            if self.ada:
+                if self.vuelta < len(self.adaline.time_errors):
+                    self.draw_error(self.adaline.time_errors[self.vuelta], self.vuelta, len(self.adaline.time_errors))
             self.vuelta += 1
     ########################################
 
@@ -156,7 +180,7 @@ class mainMenu(FloatLayout):
             OldRangey = (5 - (-5))
             NewRangey = ((180 + 370) - 180)
             NewValuey = round((((self.Entry_test[i][2] - (-5)) * NewRangey) / OldRangey) + 180, 1)
-            Rectangle(pos=(NewValuex - 12, NewValuey - 12), size=(26, 26), source=s, group="dot")
+            Rectangle(pos=(NewValuex - 12, NewValuey - 12), size=(20, 20), source=s, group="dot")
 
     def test(self):
         if self.adaline is not None:
@@ -176,16 +200,28 @@ class mainMenu(FloatLayout):
                           content=Label(text='Untrained Adaline.'),
                           size_hint=(None, None), size=(200, 100))
             popup.open()
+
+    # lineas de la grafica del error
+    def set_other_lines(self):
+        with self.canvas:
+            c = 0
+            for x in range(10):
+                Color(0, 0, 0, .2, mode='rgb')
+                Line(points=(40, 121 - c, 40 + 370, 121 - c), width=1)
+                c += 10
+        Color(1, 0, 0, .5, mode='rgb')
+        Line(points=(40, 121 - 50, 40 + 370, 121 - 50), width=1.2)
+
     # (La funcion que dibuja las lineas del plano)
     def set_lines(self):
         with self.canvas:
-            cont=0
+            cont = 0
             for x in range(10):
                 Color(0, 0, 0, .2, mode='rgb')
-                Line(points=(43+cont, 550, 43+cont, 184), width=1)
-                Line(points=(43, 550-cont, 43+370, 550-cont), width=1)
+                Line(points=(42+cont, 550, 42+cont, 184), width=1)
+                Line(points=(42, 550-cont, 42+370, 550-cont), width=1)
                 #cont+=18.6
-                cont+=37.2
+                cont += 37.2
         Color( 1, 0, 0, .5, mode='rgb')
         Line(points= (43 + 185, 550, 43 + 185, 184),width= 1.2)
         Line(points= (43, 550 - 185, 43 + 370, 550 - 185),width= 1.2)
@@ -210,26 +246,18 @@ class mainMenu(FloatLayout):
 
     #cuando se da clic en entrenar
     def start_training(self, lr, me, de):
+        self.reset_graph()
         if self.ada:
             self.adaline = Adaline(lr, me, self.Entry_x, self.Wish_y, de)
         else:
             self.adaline = Perceptron(lr, me, self.Entry_x, self.Wish_y)
         self.anima = True
         self.vuelta = 0
-    #TODO agregar que tome los datos del error deseado
+
     def get_data(self, lrn, mx, es, ep, de):
         #limpiar lineas si hay
         self.soft_reset(True)
         des = 0
-        if de.text != "":
-            try:
-                des = float(de.text)
-                if des <= 0.0:
-                    des = 0.1
-                    de.text = str(des)
-            except ValueError:
-                print("Not Float")
-
         if(len(self.Entry_x) > 0):
             lr = self.Learning_rate
             me = self.Max_epochs
@@ -249,8 +277,17 @@ class mainMenu(FloatLayout):
                         mx.text = str(me)
                 except ValueError:
                     print("Not Integer")
+            if de.text != "":
+                try:
+                    des = float(de.text)
+                    # el error solo va de 0 a 1
+                    if des < 0.0 or des > 1.0:
+                        des = 0.1
+                        de.text = str(des)
+                except ValueError:
+                    print("Not Float")
             es.text = "Training..."
-            self.ada=True
+            self.ada = True
             self.start_training(lr, me, des)
             if self.adaline.nonlinear:
                 es.text = "State: "+"Reached Max. Epochs"
@@ -262,6 +299,7 @@ class mainMenu(FloatLayout):
                           content=Label(text='You need at least one entry to train '),
                           size_hint=(None, None), size=(300, 100))
             popup.open()
+
     def get_datas(self, lrn, mx, es, ep):
         #limpiar lineas si hay
         self.soft_reset(True)
@@ -286,7 +324,7 @@ class mainMenu(FloatLayout):
                     print("No es Entero")
             es.text = "Training..."
             self.ada = False
-            self.start_training(lr,me,0)
+            self.start_training(lr, me, 0)
             if self.adaline.nonlinear==True:
                 es.text = "Non Linear"
             else:
@@ -302,7 +340,7 @@ class mainMenu(FloatLayout):
 class AdalineApp(App):
     def build(self):
         menu = mainMenu()
-        Clock.schedule_interval(menu.draw_umbral, 0.2)
+        Clock.schedule_interval(menu.draw_umbral, 0.1)
         return menu
 
 

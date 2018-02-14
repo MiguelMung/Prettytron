@@ -116,7 +116,7 @@
                     size_hint_y: .1
 
                 Label:
-                    id: plane
+                    id: graph
                     size_hint_y: .5
                     size_hint_x: None
                     pos_hint: {"x": 0.09, 'y': 0}
@@ -170,7 +170,7 @@
                             size_hint_y: .6
                             spacing: (1,10)
                             Label:
-                                text: "Learning_rate:"
+                                text: "Learning rate:"
 
                             TextInput:
                                 input_filter: 'float'
@@ -187,7 +187,7 @@
 
                             Label:
 
-                                text: "Max_Epochs:"
+                                text: "Max Epochs:"
 
                             TextInput:
                                 input_filter: 'int'
@@ -203,7 +203,7 @@
                                 text: "Desired Error:"
 
                             TextInput:
-                                input_filter: 'int'
+                                input_filter: 'float'
                                 id: deA
                                 multiline: False
                                 hint_text: "0"
@@ -488,9 +488,23 @@
         text: "x: 5"
         font_size: 15
     Label:
+        color: .1,.4,.1, 1
+        size_hint_y: None
+        size_hint_x: None
+        pos_hint: {"x": -0.03, 'y': 0.12}
+        text: "5"
+        font_size: 15
+    Label:
+        color: .1,.4,.1, 1
+        size_hint_y: None
+        size_hint_x: None
+        pos_hint: {"x": -0.03, 'y': -0.05}
+        text: "-5"
+        font_size: 15
+    Label:
         color: 1,0,1,1
         size_hint_y: None
         size_hint_x: None
         pos_hint: {"x": -0.03, 'y': 0.04}
-        text: "Ea"
+        text: "E"
         font_size: 15
