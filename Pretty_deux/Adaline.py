@@ -62,7 +62,7 @@ class Adaline:
         print("Pesos iniciales:")
         print(self.weights)
         self.epochs = 0
-        #para que sea un error diferente al inicio
+        #para que sea un error diferente al inicio#
         self.error = self.desired_error+1
         while (self.error != self.desired_error and self.epochs < self.max_epochs):
             self.set_time(self.weights[0], self.weights[1], self.weights[2])

@@ -321,6 +321,7 @@
                             pos_hint:{"x": 0.35, 'y':0}
                             id: train
                             text: "Train"
+
                             on_release: root.get_datas(lrnrt, mxep, state,epoch)
                         BoxLayout:
                             size_hint_y: .1

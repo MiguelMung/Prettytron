@@ -292,6 +292,7 @@ class mainMenu(FloatLayout):
             else:
                 es.text = "Trained!"
                 ep.text = "Number of Epochs: "+str(self.adaline.epochs)
+                #
         else:
             popup = Popup(title='¡Error!',
                           content=Label(text='You need at least one entry to train '),
