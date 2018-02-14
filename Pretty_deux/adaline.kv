@@ -8,7 +8,6 @@
                 size: self.size
                 source: "Img/back.jpg"
 
-
         BoxLayout:
             size_hint_y: None
             pos_hint: {"x": 0, 'y': .95}
@@ -140,8 +139,7 @@
                     color: 1,0,1,1
                     text:"Number of Epochs"
 
-            Label:
-                size_hint_x:.2
+
 
             TabbedPanel:
                 background_color: (1, 1, 1, 0)
@@ -294,7 +292,7 @@
                         GridLayout:
                             rows: 2
                             cols: 3
-                            size_hint_y: .25
+                            size_hint_y: .3
                             spacing: (1,10)
                             Label:
                                 text: "Learning_rate:"
@@ -323,7 +321,7 @@
                             pos_hint:{"x": 0.35, 'y':0}
                             id: train
                             text: "Train"
-                            on_release: root.get_data(lrnrt, mxep, state,epoch)
+                            on_release: root.get_datas(lrnrt, mxep, state,epoch)
                         BoxLayout:
                             size_hint_y: .1
                             size_hint_x: .4
@@ -366,6 +364,92 @@
                         Label:
                             size_hint_y: .3
 ###
+                TabbedPanelItem:
+                    text: 'Compare'
+                    BoxLayout:
+                        spacing:20
+                        orientation: 'vertical'
+                        size_hint_x: .9
+                        canvas:
+                            Color:
+                                rgba: 1, 1, 1, .9
+                            Rectangle:
+                                pos: (self.pos[0]-10,self.pos[1]+20)
+                                size: (self.size[0]+20,self.size[1]-20)
+                                source: "Img/fa.jpg"
+                        Label:
+                            text: "Adaline"
+                            size_hint_y: .1
+                        Label:
+                            id: a_s
+                            text: "State:"
+                            size_hint_y: .1
+                        Label:
+                            id: a_l
+                            text: "Learning rate:"
+                            size_hint_y: .1
+                        Label:
+                            id: a_m
+                            text: "Max Epochs:"
+                            size_hint_y: .1
+                        Label:
+                            id: a_n
+                            text: "Number Epochs:"
+                            size_hint_y: .1
+                        Label:
+                            id: a_d
+                            text: "Desired error:"
+                            size_hint_y: .1
+                        Label:
+                            text: "Initial weight:"
+                            size_hint_y: .1
+                        Label:
+                            id: a_iw
+                            size_hint_y: .1
+                        Label:
+                            text: "Final weight:"
+                            size_hint_y: .1
+                        Label:
+                            id: a_fw
+                            size_hint_y: .1
+                        Label:
+                            text: "Simple"
+                            size_hint_y: .1
+                        Label:
+                            id: s_s
+                            text: "State:"
+                            size_hint_y: .1
+                        Label:
+                            id: s_l
+                            text: "Learning rate:"
+                            size_hint_y: .1
+                        Label:
+                            id: s_m
+                            text: "Max Epochs:"
+                            size_hint_y: .1
+                        Label:
+                            id: s_n
+                            text: "Number Epochs:"
+                            size_hint_y: .1
+                        Label:
+                            text: "Initial weight:"
+                            size_hint_y: .1
+                        Label:
+                            id: s_iw
+                            size_hint_y: .1
+                        Label:
+                            text: "Final weight:"
+                            size_hint_y: .1
+                        Label:
+                            id: s_fw
+                            size_hint_y: .1
+
+
+
+
+
+
+
 
 
 

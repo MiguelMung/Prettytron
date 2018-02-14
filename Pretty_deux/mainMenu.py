@@ -24,6 +24,7 @@ class mainMenu(FloatLayout):
     Wish_y =[]              #Listado de labels o clase deseada
     adaline = None          #declarando el adaline
     anima = False           #Animacion Encendida
+    perceptron =None       #declarando el simple
     vuelta = 0              #Vuelta de la animacion
     ada = True              #Define si usar el adaline o el perceptron
 
@@ -249,6 +250,7 @@ class mainMenu(FloatLayout):
                 except ValueError:
                     print("Not Integer")
             es.text = "Training..."
+            self.ada=True
             self.start_training(lr, me, des)
             if self.adaline.nonlinear:
                 es.text = "State: "+"Reached Max. Epochs"
@@ -260,7 +262,41 @@ class mainMenu(FloatLayout):
                           content=Label(text='You need at least one entry to train '),
                           size_hint=(None, None), size=(300, 100))
             popup.open()
-
+    def get_datas(self, lrn, mx, es, ep):
+        #limpiar lineas si hay
+        self.soft_reset(True)
+        if(len(self.Entry_x)>0):
+            lr = self.Learning_rate
+            me = self.Max_epochs
+            if lrn.text != "":
+                try:
+                    lr = float(lrn.text)
+                    if lr < 0.1 or lr > 0.9:
+                        lr = 0.1
+                        lrn.text=str(lr)
+                except ValueError:
+                    print("No es Flotante")
+            if mx.text != "":
+                try:
+                    me = int(mx.text)
+                    if me < 1:
+                        me = 100
+                        mx.text=str(me)
+                except ValueError:
+                    print("No es Entero")
+            es.text = "Training..."
+            self.ada = False
+            self.start_training(lr,me,0)
+            if self.adaline.nonlinear==True:
+                es.text = "Non Linear"
+            else:
+                es.text = "Trained!"
+                ep.text = "Number of Epochs: "+str(self.adaline.epochs)
+        else:
+            popup = Popup(title='¡Error!',
+                          content=Label(text='You need at least one entry to train '),
+                          size_hint=(None, None), size=(300, 100))
+            popup.open()
 
 class AdalineApp(App):
     def build(self):
