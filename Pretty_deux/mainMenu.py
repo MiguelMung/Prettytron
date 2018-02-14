@@ -216,9 +216,19 @@ class mainMenu(FloatLayout):
         self.anima = True
         self.vuelta = 0
     #TODO agregar que tome los datos del error deseado
-    def get_data(self, lrn, mx, es, ep):
+    def get_data(self, lrn, mx, es, ep, de):
         #limpiar lineas si hay
         self.soft_reset(True)
+        des = 0
+        if de.text != "":
+            try:
+                des = float(de.text)
+                if des <= 0.0:
+                    des = 0.1
+                    de.text = str(des)
+            except ValueError:
+                print("Not Float")
+
         if(len(self.Entry_x) > 0):
             lr = self.Learning_rate
             me = self.Max_epochs
@@ -239,11 +249,11 @@ class mainMenu(FloatLayout):
                 except ValueError:
                     print("Not Integer")
             es.text = "Training..."
-            self.start_training(lr, me, 0.01)
+            self.start_training(lr, me, des)
             if self.adaline.nonlinear:
-                es.text = "Reached Max. Epochs"
+                es.text = "State: "+"Reached Max. Epochs"
             else:
-                es.text = "Trained!"
+                es.text = "State: "+"Trained!"
             ep.text = "Number of Epochs: "+str(self.adaline.epochs)
         else:
             popup = Popup(title='¡Error!',
