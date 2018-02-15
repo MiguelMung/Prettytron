@@ -157,7 +157,7 @@
                                 rgba: 1, 1, 1, .9
                             Rectangle:
                                 pos: (self.pos[0]-10,self.pos[1]+20)
-                                size: (self.size[0]+20,self.size[1]-20)
+                                size: (self.size[0]+35,self.size[1]-20)
                                 source: "Img/fa.jpg"
                         Label:
                             text: "Training"
@@ -247,7 +247,7 @@
                                     rgba: 1, 1, 1, .9
                                 Rectangle:
                                     pos: (self.pos[0]-10,self.pos[1])
-                                    size: (self.size[0]+20,self.size[1]-15)
+                                    size: (self.size[0]+35,self.size[1]-15)
                                     source: "Img/22.png"
                         Label:
                             text:"Testing"
@@ -283,7 +283,7 @@
                                 rgba: 1, 1, 1, .9
                             Rectangle:
                                 pos: (self.pos[0]-10,self.pos[1]+20)
-                                size: (self.size[0]+20,self.size[1]-20)
+                                size: (self.size[0]+35,self.size[1]-20)
                                 source: "Img/fa.jpg"
                         Label:
                             text: "Training"
@@ -344,7 +344,7 @@
                                     rgba: 1, 1, 1, .9
                                 Rectangle:
                                     pos: (self.pos[0]-10,self.pos[1])
-                                    size: (self.size[0]+20,self.size[1]-15)
+                                    size: (self.size[0]+35,self.size[1]-15)
                                     source: "Img/22.png"
                         Label:
                             text:"Testing"
@@ -376,74 +376,101 @@
                                 rgba: 1, 1, 1, .9
                             Rectangle:
                                 pos: (self.pos[0]-10,self.pos[1]+20)
-                                size: (self.size[0]+20,self.size[1]-20)
+                                size: (self.size[0]+35,self.size[1]-20)
                                 source: "Img/fa.jpg"
                         Label:
-                            text: "Adaline"
+                            size_hint_y: .1
+                        Label:
+                            text: "[b][i][color=#f44242]Adaline[/i][/b]"
+                            markup:True
                             size_hint_y: .1
                         Label:
                             id: a_s
                             text: "State:"
+                            markup:True
                             size_hint_y: .1
                         Label:
                             id: a_l
+                            markup:True
                             text: "Learning rate:"
                             size_hint_y: .1
                         Label:
                             id: a_m
+                            markup:True
                             text: "Max Epochs:"
                             size_hint_y: .1
                         Label:
                             id: a_n
                             text: "Number Epochs:"
+                            markup:True
                             size_hint_y: .1
                         Label:
                             id: a_d
                             text: "Desired error:"
                             size_hint_y: .1
+                            markup:True
                         Label:
-                            text: "Initial weight:"
+                            text: "[b][color=#f4f75b]Initial weight[/b]"
                             size_hint_y: .1
+                            markup:True
                         Label:
                             id: a_iw
                             size_hint_y: .1
                         Label:
-                            text: "Final weight:"
+                            text: "[b][color=#f49a55]Final weight[/b]"
                             size_hint_y: .1
+                            markup:True
                         Label:
                             id: a_fw
                             size_hint_y: .1
+
                         Label:
-                            text: "Simple"
+                            text: "[b][i][color=#77ff92]Simple[/b][/i]"
+                            markup:True
                             size_hint_y: .1
                         Label:
                             id: s_s
+                            markup:True
                             text: "State:"
                             size_hint_y: .1
                         Label:
                             id: s_l
+                            markup:True
                             text: "Learning rate:"
                             size_hint_y: .1
                         Label:
                             id: s_m
+                            markup:True
                             text: "Max Epochs:"
                             size_hint_y: .1
                         Label:
                             id: s_n
+                            markup:True
                             text: "Number Epochs:"
                             size_hint_y: .1
                         Label:
-                            text: "Initial weight:"
+                            markup:True
+                            text: "[b][color=#99fcf4]Initial weight[/b]"
                             size_hint_y: .1
                         Label:
                             id: s_iw
                             size_hint_y: .1
                         Label:
-                            text: "Final weight:"
+                            text: "[b][color=#77ff92]Final weight[/b]"
+                            markup:True
                             size_hint_y: .1
                         Label:
                             id: s_fw
                             size_hint_y: .1
+                        Label:
+                            size_hint_y: .1
+                        Button:
+                            size_hint_x: .4
+                            size_hint_y: .3
+                            text: "Compare"
+                            pos_hint:{"x": 0.3, 'y':0}
+                            on_release: root.comparar()
+                        Label:
 
 
 

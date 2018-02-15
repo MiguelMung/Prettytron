@@ -27,7 +27,10 @@ class mainMenu(FloatLayout):
     perceptron =None       #declarando el simple
     vuelta = 0              #Vuelta de la animacion
     ada = True              #Define si usar el adaline o el perceptron
-
+    S= False
+    A= False
+    Sw=[]
+    Aw=[]
 
     # Constructor
     def __init__(self, **kwargs):
@@ -38,7 +41,8 @@ class mainMenu(FloatLayout):
 
     # Limpia el plano y la variable de Entry_x y Wish_y
     def reset(self):
-
+        self.S=self.A=False
+        self.clean_labels()
         with self.canvas:
             Color(1, 1, 1, 1, mode='rbg')
             Rectangle(pos =(42,550-370), size =(370,370), source= "Img/back2.jpg")
@@ -76,7 +80,7 @@ class mainMenu(FloatLayout):
                 OldRangey = (5 - (-5))
                 NewRangey = ((180 + 370) - 180)
                 NewValuey = round((((self.Entry_x[i][2] - (-5)) * NewRangey) / OldRangey) + 180, 1)
-                Rectangle(pos=(NewValuex - 12, NewValuey - 12), size=(20, 20), source=s, group="dot")
+                Rectangle(pos=(NewValuex - 10, NewValuey - 10), size=(20, 20), source=s, group="dot")
 
     # Agrega la entrada a la lista junto con la deseada *pasa el rango a (-5 a 5)*
     def add_to_entry(self, x, y, d):
@@ -180,7 +184,7 @@ class mainMenu(FloatLayout):
             OldRangey = (5 - (-5))
             NewRangey = ((180 + 370) - 180)
             NewValuey = round((((self.Entry_test[i][2] - (-5)) * NewRangey) / OldRangey) + 180, 1)
-            Rectangle(pos=(NewValuex - 12, NewValuey - 12), size=(20, 20), source=s, group="dot")
+            Rectangle(pos=(NewValuex - 10, NewValuey - 10), size=(20, 20), source=s, group="dot")
 
     def test(self):
         if self.adaline is not None:
@@ -241,7 +245,7 @@ class mainMenu(FloatLayout):
                     nclass = 3
                     s = "Img/te.png"
                 Color(1, 1, 1, mode='rgv')
-                Rectangle(pos=(touch.pos[0] - 12, touch.pos[1] - 12), size=(20, 20), source=s, group="dot")
+                Rectangle(pos=(touch.pos[0] - 10, touch.pos[1] - 10), size=(20, 20), source=s, group="dot")
             self.add_to_entry(touch.pos[0], touch.pos[1], nclass)
 
     #cuando se da clic en entrenar
@@ -249,8 +253,10 @@ class mainMenu(FloatLayout):
         self.reset_graph()
         if self.ada:
             self.adaline = Adaline(lr, me, self.Entry_x, self.Wish_y, de)
+            self.get_Compare(1)
         else:
             self.adaline = Perceptron(lr, me, self.Entry_x, self.Wish_y)
+            self.get_Compare(2)
         self.anima = True
         self.vuelta = 0
 
@@ -337,11 +343,82 @@ class mainMenu(FloatLayout):
                           size_hint=(None, None), size=(300, 100))
             popup.open()
 
+    def get_Compare(self,type):
+        if type ==1:
+            self.A=True
+            self.Aw = self.adaline.time_weights
+            if self.adaline.nonlinear:
+                self.ids.a_s.text = "[b]State:[/b] " + "Reached Max. Epochs"
+            else:
+                self.ids.a_s.text = "[b]State:[/b] " + "Trained!"
+            self.ids.a_l.text="[b]Learning rate:[/b] "+str(self.adaline.learning_rate)
+            self.ids.a_m.text="[b]Max Epochs:[/b] " + str(self.adaline.max_epochs)
+            self.ids.a_n.text="[b]Number Epochs:[/b] "+str(self.adaline.epochs)
+            self.ids.a_d.text="[b]Desired error:[/b] "+str(self.adaline.desired_error)
+            l=len(self.adaline.time_weights) - 1
+            self.ids.a_iw.text="[ "+str(round(self.adaline.time_weights[0][0],2))+", "+str(round(self.adaline.time_weights[0][1],2))+", "+str(round(self.adaline.time_weights[0][2],2))+"]"
+            self.ids.a_fw.text="[ "+str(round(self.adaline.time_weights[l][0],2))+", "+str(round(self.adaline.time_weights[l][1],2))+", "+str(round(self.adaline.time_weights[l][2],2))+"]"
+        elif type ==2:
+            self.S = True
+            self.Sw=self.adaline.time_weights
+            if self.adaline.nonlinear:
+                self.ids.s_s.text = "[b]State:[/b] " + "Non linear"
+            else:
+                self.ids.s_s.text = "[b]State:[/b] " + "Trained!"
+            self.ids.s_l.text="[b]Learning rate:[/b] "+str(self.adaline.learning_rate)
+            self.ids.s_m.text="[b]Max Epochs:[/b] " + str(self.adaline.max_epochs)
+            self.ids.s_n.text="[b]Number Epochs:[/b] "+str(self.adaline.epochs)
+            l=len(self.adaline.time_weights) - 1
+            self.ids.s_iw.text="[ "+str(round(self.adaline.time_weights[0][0],2))+", "+str(round(self.adaline.time_weights[0][1],2))+", "+str(round(self.adaline.time_weights[0][2],2))+"]"
+            self.ids.s_fw.text="[ "+str(round(self.adaline.time_weights[l][0],2))+", "+str(round(self.adaline.time_weights[l][1],2))+", "+str(round(self.adaline.time_weights[l][2],2))+"]"
+
+    def comparar(self):
+        if self.S ==False:
+            popup = Popup(title='¡Error!',
+                          content=Label(text='First train with Simple'),
+                          size_hint=(None, None), size=(300, 100))
+            popup.open()
+        if self.A == False:
+            popup = Popup(title='¡Error!',
+                          content=Label(text='First train with Adaline'),
+                          size_hint=(None, None), size=(300, 100))
+            popup.open()
+        if self.A and self.S :
+            we=[]
+            we.append(self.Aw[0])
+            we.append(self.Aw[len(self.Aw)-1])
+            we.append(self.Sw[0])
+            we.append(self.Sw[len(self.Sw)-1])
+            self.draw_com(we)
+
+
+    def draw_com(self,we):
+        self.soft_reset(False)
+        print(we[0])
+        self.draw_w(we[0], [1, 1, 0])
+        self.draw_w(we[1], [1, .5, 0])
+        self.draw_w(we[2], [0, 1, 1])
+        self.draw_w(we[3], [0, 1, .5])
+
+    def clean_labels(self):
+        self.ids.a_s.text = "[b]State:[/b] "
+        self.ids.a_l.text = "[b]Learning rate:[/b] "
+        self.ids.a_m.text = "[b]Max Epochs:[/b] "
+        self.ids.a_n.text = "[b]Number Epochs:[/b] "
+        self.ids.a_d.text = "[b]Desired error:[/b] "
+        self.ids.a_iw.text = " "
+        self.ids.a_fw.text = " "
+        self.ids.s_s.text = "[b]State:[/b] "
+        self.ids.s_l.text = "[b]Learning rate:[/b] "
+        self.ids.s_m.text = "[b]Max Epochs:[/b] "
+        self.ids.s_n.text = "[b]Number Epochs:[/b] "
+        self.ids.s_iw.text = " "
+        self.ids.s_fw.text = " "
+
 class AdalineApp(App):
     def build(self):
         menu = mainMenu()
         Clock.schedule_interval(menu.draw_umbral, 0.1)
         return menu
-
 
 AdalineApp().run()
