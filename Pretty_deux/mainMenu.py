@@ -117,7 +117,6 @@ class mainMenu(FloatLayout):
             NewRangeY = ((21 + 100) - 21)
             NewValueY = round((((y - (-5)) * NewRangeY) / OldRangeY) + 21, 1)
             Ellipse(pos=(NewValueX - d/2, NewValueY -d/2), size=(d, d))
-            #Line(circle=(NewValueX, NewValueY, 2))
 
     ########################################
     ##------------Animacion---------------##

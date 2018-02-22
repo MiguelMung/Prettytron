@@ -72,10 +72,10 @@ class Adaline:
                 y = self.wx(self.entries[i])
                 error = self.desired[i] - self.F(y)
                 errAcumulado += error
-                if error != 0:
-                    # ajustando los pesos
-                    for j in range(0, len(self.weights)):
-                        self.weights[j] = self.weights[j] + self.incW(error, y, self.entries[i][j])
+
+                # ajustando los pesos
+                for j in range(0, len(self.weights)):
+                    self.weights[j] = self.weights[j] + self.incW(error, y, self.entries[i][j])
 
             self.error = errAcumulado/len(self.entries)
             self.set_error(errAcumulado)
