@@ -354,6 +354,7 @@ class mainMenu(FloatLayout):
             self.ids.a_m.text="[b]Max Epochs:[/b] " + str(self.adaline.max_epochs)
             self.ids.a_n.text="[b]Number Epochs:[/b] "+str(self.adaline.epochs)
             self.ids.a_d.text="[b]Desired error:[/b] "+str(self.adaline.desired_error)
+            self.ids.a_f.text = "[b]Final error:[/b] " + str(round(self.adaline.error,6))
             l=len(self.adaline.time_weights) - 1
             self.ids.a_iw.text="[ "+str(round(self.adaline.time_weights[0][0],2))+", "+str(round(self.adaline.time_weights[0][1],2))+", "+str(round(self.adaline.time_weights[0][2],2))+"]"
             self.ids.a_fw.text="[ "+str(round(self.adaline.time_weights[l][0],2))+", "+str(round(self.adaline.time_weights[l][1],2))+", "+str(round(self.adaline.time_weights[l][2],2))+"]"
