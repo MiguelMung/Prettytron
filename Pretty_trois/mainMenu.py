@@ -6,8 +6,9 @@ from kivy.graphics import Color, Ellipse
 from kivy.uix.label import Label
 from kivy.uix.popup import Popup
 from kivy.core.window import Window
-from Pretty_deux.Adaline import *
-from Pretty_deux.Perceptron import *
+from Pretty_trois.Adaline import *
+from Pretty_trois.multilayer import *
+from Pretty_trois.Perceptron import *
 from kivy.uix.floatlayout import FloatLayout
 from kivy.graphics.vertex_instructions import Rectangle, Line, Point
 
@@ -24,7 +25,7 @@ class mainMenu(FloatLayout):
     Wish_y =[]              #Listado de labels o clase deseada
     adaline = None          #declarando el adaline
     anima = False           #Animacion Encendida
-    perceptron =None       #declarando el simple
+    perceptron =None        #declarando el simple
     vuelta = 0              #Vuelta de la animacion
     ada = True              #Define si usar el adaline o el perceptron
     S= False
@@ -99,8 +100,10 @@ class mainMenu(FloatLayout):
 
     # (Referencia) para saber que todom se registro bien borrar luego O.o por que se puso azul?
     def pr_f(self):
-        print(self.Entry_x)
-        print(self.Wish_y)
+        m = 0
+        m= multilayer(.5, 20, self.Entry_x, self.Wish_y, 1, 2,[2,3])
+
+
 
     #graficar error
     def draw_error(self, e, t, n):
@@ -251,6 +254,7 @@ class mainMenu(FloatLayout):
     def start_training(self, lr, me, de):
         self.reset_graph()
         if self.ada:
+            print(self.Entry_x)
             self.adaline = Adaline(lr, me, self.Entry_x, self.Wish_y, de)
             self.get_Compare(1)
         else:

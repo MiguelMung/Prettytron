@@ -1,21 +1,22 @@
+#Base de la ventana
 <mainMenu>:
     FloatLayout:
+
+        #Se pinta la imagen de fondo
         canvas:
-            Color:
-                rgba: 1, 1, 1, 1
             Rectangle:
                 pos: self.pos
                 size: self.size
                 source: "Img/back.jpg"
 
+        #Contiene el btn de prueba y lbl plano
         BoxLayout:
+            height: "30dp"
             size_hint_y: None
             pos_hint: {"x": 0, 'y': .95}
-            height: "30dp"
             Button:
-                size_hint_x: None
-                size_hint_x: .04
                 id: dumy
+                size_hint_x: .04
                 on_press: root.pr_f()
             Label:
                 color: 1,0,1,1

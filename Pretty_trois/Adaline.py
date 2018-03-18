@@ -60,18 +60,21 @@ class Adaline:
             self.weights.append(random.uniform(-5, 5))
         self.time_weights = []
         print("Pesos iniciales:")
-        print(self.weights)
+
         self.epochs = 0
         #para que sea un error diferente al inicio#
         self.error = self.desired_error+1
         while (self.error != self.desired_error and self.epochs < self.max_epochs):
             self.set_time(self.weights[0], self.weights[1], self.weights[2])
             errAcumulado = 0
+            print("hello")
+            print(self.entries)
             for i in range(0, len(self.entries)):
                 # obteniendo el error
                 y = self.wx(self.entries[i])
                 error = self.desired[i] - self.F(y)
                 errAcumulado += error
+                print("h "+str(error))
 
                 # ajustando los pesos
                 for j in range(0, len(self.weights)):
