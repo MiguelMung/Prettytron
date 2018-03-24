@@ -113,6 +113,7 @@
 
                         text: "Class3"
                         id: cl3
+                        disabled: True
                         on_release: root.CH_class = 2
 
                     Label:
@@ -154,9 +155,11 @@
 
 
             TabbedPanel:
+                id: tabsitas
                 background_color: (1, 1, 1, 0)
                 do_default_tab: False
                 tab_width: 80
+                on_touch_down: root.changeClass3(cl3, tabsitas)
 
                 TabbedPanelItem:
                     size_hint_x: .25

@@ -62,6 +62,11 @@ class mainMenu(FloatLayout):
             Rectangle(pos=(40, 121 - 100), size=(370, 100), source="Img/back2.jpg")
             self.set_other_lines()
 
+    def changeRange(self, oxu, oxl, nxu, nxl, v):
+        OldRangex = oxu - oxl
+        NewRangex = nxu - nxl
+        return round((((v - oxl) * NewRangex) / OldRangex) + nxl, 1)
+
     def soft_reset(self, sec):
         if sec:
             self.adaline = None
@@ -76,22 +81,14 @@ class mainMenu(FloatLayout):
                 else:
                     s = "Img/tu.png"
                 Color(1, 1, 1, mode='rgv')
-                OldRangex = (5 - (-5))
-                NewRangex = (412 - (412 - 370))
-                NewValuex = round((((self.Entry_x[i][1] - (-5)) * NewRangex) / OldRangex) + (412 - 370), 1)
-                OldRangey = (5 - (-5))
-                NewRangey = ((180 + 370) - 180)
-                NewValuey = round((((self.Entry_x[i][2] - (-5)) * NewRangey) / OldRangey) + 180, 1)
+                NewValuex = self.changeRange(5, -5, 412, (412 - 370), self.Entry_x[i][1])
+                NewValuey = self.changeRange(5, -5, (180 + 370), 180, self.Entry_x[i][2])
                 Rectangle(pos=(NewValuex - 10, NewValuey - 10), size=(20, 20), source=s, group="dot")
 
     # Agrega la entrada a la lista junto con la deseada *pasa el rango a (-5 a 5)*
     def add_to_entry(self, x, y, d):
-        OldRangex = (412 - (412-370))
-        NewRangex = (5 - (-5))
-        NewValuex = round((((x - (412-370)) * NewRangex) / OldRangex) + (-5), 1)
-        OldRangey = ((180 + 370) - 180)
-        NewRangey = (5 - (-5))
-        NewValuey = round((((y - 180) * NewRangey) / OldRangey) + (-5), 1)
+        NewValuex = self.changeRange(412, (412-370), 5, -5, x)
+        NewValuey = self.changeRange((180 + 370), 180, 5, -5, y)
         #entrada fantasma de -1 para el umbral
         if d==3:
             self.Entry_test.append((-1.0, float(NewValuex), float(NewValuey)))
@@ -114,13 +111,9 @@ class mainMenu(FloatLayout):
             x = t
             y = e
             d = 2
-            OldRangeX = ((n-1) - 0)
-            NewRangeX = (410 - (410 - 370))
-            NewValueX = round((((x - 0) * NewRangeX) / OldRangeX) + (410 - 370), 1)
-            OldRangeY = (5 - (-5))
-            NewRangeY = ((21 + 100) - 21)
-            NewValueY = round((((y - (-5)) * NewRangeY) / OldRangeY) + 21, 1)
-            Ellipse(pos=(NewValueX - d/2, NewValueY -d/2), size=(d, d))
+            NewValuex = self.changeRange((n-1), 0, 410, (410 - 370), x)
+            NewValuey = self.changeRange(5, -5, (21 + 100), 21, y)
+            Ellipse(pos=(NewValuex - d/2, NewValuey - d/2), size=(d, d))
 
     ########################################
     ##------------Animacion---------------##
@@ -136,7 +129,7 @@ class mainMenu(FloatLayout):
                     self.draw_w(self.adaline.time_weights[len(self.adaline.time_weights) - 1], [0, 1, 0])
                     self.anima = False
             #graficando el error en adaline
-            if self.ada:
+            if self.ada or self.mlp:
                 if self.vuelta < len(self.adaline.time_errors):
                     self.draw_error(self.adaline.time_errors[self.vuelta], self.vuelta, len(self.adaline.time_errors))
             self.vuelta += 1
@@ -163,14 +156,10 @@ class mainMenu(FloatLayout):
             elif yf < -5:
                 yf = -5
                 xf = (b-yf) / (-m)
-            OldRangex = (5 - (-5))
-            NewRangex = (412 - (412 - 370))
-            NewValuexi = round((((xi - (-5)) * NewRangex) / OldRangex) + (412 - 370), 1)
-            NewValuexf = round((((xf - (-5)) * NewRangex) / OldRangex) + (412 - 370), 1)
-            OldRangey = (5 - (-5))
-            NewRangey = ((180 + 370) - 180)
-            NewValueyi = round((((yi - (-5)) * NewRangey) / OldRangey) + 180, 1)
-            NewValueyf = round((((yf - (-5)) * NewRangey) / OldRangey) + 180, 1)
+            NewValuexi = self.changeRange(5, -5, 412, (412 - 370), xi)
+            NewValueyi = self.changeRange(5, -5, (180 + 370), 180, yi)
+            NewValuexf = self.changeRange(5, -5, 412, (412 - 370), xf)
+            NewValueyf = self.changeRange(5, -5, (180 + 370), 180, yf)
             Line(points=(NewValuexi, NewValueyi, NewValuexf, NewValueyf), width=.7)
 
     def change_image(self, c, i):
@@ -180,15 +169,37 @@ class mainMenu(FloatLayout):
             else:
                 s = "Img/tu2.png"
             Color(1, 1, 1, mode='rgv')
-            OldRangex = (5 - (-5))
-            NewRangex = (412 - (412 - 370))
-            NewValuex = round((((self.Entry_test[i][1] - (-5)) * NewRangex) / OldRangex) + (412 - 370), 1)
-            OldRangey = (5 - (-5))
-            NewRangey = ((180 + 370) - 180)
-            NewValuey = round((((self.Entry_test[i][2] - (-5)) * NewRangey) / OldRangey) + 180, 1)
+            NewValuex = self.changeRange(5, -5, 412, (412 - 370), self.Entry_test[i][1])
+            NewValuey = self.changeRange(5, -5, (180 + 370), 180, self.Entry_test[i][2])
             Rectangle(pos=(NewValuex - 10, NewValuey - 10), size=(20, 20), source=s, group="dot")
 
-    #def makeItColorfull(self):
+    def makeItColorfull(self):
+        with self.canvas:
+            x = 42
+            y = 180
+            while x <= 412:
+                while y <= 550:
+                    xa = self.changeRange(412, 42, 5, -5, x)
+                    ya = self.changeRange(550, 180, 5, -5, y)
+                    cls = self.adaline.clasify([xa, ya])
+                    d = 2
+                    if cls == 0:
+                        Color(228, 124, 232, 0.5, mode='rgb')
+                    elif cls == 1:
+                        Color(114, 240, 240, 0.5, mode='rgb')
+                    else:
+                        Color(114, 240, 147, 0.5, mode='rgb')
+                    Ellipse(pos=(x - d / 2, y - d / 2), size=(d, d))
+                    y *= 2
+                x *= 2
+            #poner de nuevo las imagenes
+
+    def changeClass3(self, cl3, tabs):
+        if tabs.current_tab.text == "MLP":
+            cl3.disabled = False
+        else:
+            self.CH_class = 0
+            cl3.disabled = True
 
     def test(self):
         if self.adaline is not None:
@@ -248,6 +259,9 @@ class mainMenu(FloatLayout):
                 elif self.CH_class ==1:
                     nclass=1
                     s = "Img/tu.png"
+                elif self.CH_class ==2:
+                    nclass=2
+                    s = "Img/lu.png"
                 elif self.CH_class == 3:
                     nclass = 3
                     s = "Img/te.png"
@@ -305,7 +319,7 @@ class mainMenu(FloatLayout):
                     print("Not Float")
             es.text = "Training..."
             self.ada = True
-            self.start_training(lr, me, des)
+            self.start_training(lr, me, des, 0, 0, 0)
             if self.adaline.nonlinear:
                 es.text = "State: "+"Reached Max. Epochs"
             else:
@@ -393,7 +407,7 @@ class mainMenu(FloatLayout):
                     print("No es Entero")
             es.text = "Training..."
             self.ada = False
-            self.start_training(lr, me, 0)
+            self.start_training(lr, me, 0, 0, 0, 0)
             if self.adaline.nonlinear == True:
                 es.text = "Non Linear"
             else:
