@@ -28,6 +28,7 @@ class mainMenu(FloatLayout):
     perceptron =None        #declarando el simple
     vuelta = 0              #Vuelta de la animacion
     ada = True              #Define si usar el adaline o el perceptron
+    mlp = False             #Define si usar el MLP
     S= False
     A= False
     Sw=[]
@@ -172,7 +173,6 @@ class mainMenu(FloatLayout):
             NewValueyf = round((((yf - (-5)) * NewRangey) / OldRangey) + 180, 1)
             Line(points=(NewValuexi, NewValueyi, NewValuexf, NewValueyf), width=.7)
 
-#
     def change_image(self, c, i):
         with self.canvas:
             if c == 0:
@@ -188,22 +188,27 @@ class mainMenu(FloatLayout):
             NewValuey = round((((self.Entry_test[i][2] - (-5)) * NewRangey) / OldRangey) + 180, 1)
             Rectangle(pos=(NewValuex - 10, NewValuey - 10), size=(20, 20), source=s, group="dot")
 
+    #def makeItColorfull(self):
+
     def test(self):
         if self.adaline is not None:
-            clases = self.adaline.clasify(self.Entry_test)
-            if len(clases) != 0:
-                i = 0
-                for c in clases:
-                    self.change_image(c, i)
-                    i += 1
+            if self.mlp:
+                self.makeItColorfull()
             else:
-                popup = Popup(title='¡Error!',
-                              content=Label(text='No new entries.'),
-                              size_hint=(None, None), size=(200, 100))
-                popup.open()
+                clases = self.adaline.clasify(self.Entry_test)
+                if len(clases) != 0:
+                    i = 0
+                    for c in clases:
+                        self.change_image(c, i)
+                        i += 1
+                else:
+                    popup = Popup(title='¡Error!',
+                                  content=Label(text='No new entries.'),
+                                  size_hint=(None, None), size=(200, 100))
+                    popup.open()
         else:
             popup = Popup(title='¡Error!',
-                          content=Label(text='Untrained Adaline.'),
+                          content=Label(text='Untrained!'),
                           size_hint=(None, None), size=(200, 100))
             popup.open()
 
@@ -251,18 +256,21 @@ class mainMenu(FloatLayout):
             self.add_to_entry(touch.pos[0], touch.pos[1], nclass)
 
     #cuando se da clic en entrenar
-    def start_training(self, lr, me, de):
+    def start_training(self, lr, me, de, nhl, nnr1, nnr2):
         self.reset_graph()
         if self.ada:
             print(self.Entry_x)
             self.adaline = Adaline(lr, me, self.Entry_x, self.Wish_y, de)
             self.get_Compare(1)
+        elif self.mlp:
+            self.adaline = multilayer(lr, me, self.Entry_x, self.Wish_y, de, nhl, [nnr1, nnr2])
         else:
             self.adaline = Perceptron(lr, me, self.Entry_x, self.Wish_y)
             self.get_Compare(2)
         self.anima = True
         self.vuelta = 0
 
+    #para adaline
     def get_data(self, lrn, mx, es, ep, de):
         #limpiar lineas si hay
         self.soft_reset(True)
@@ -309,6 +317,58 @@ class mainMenu(FloatLayout):
                           size_hint=(None, None), size=(300, 100))
             popup.open()
 
+    def changeSliderStatus(self, no, slider):
+        if no == 2:
+            slider.disabled = False
+        else:
+            slider.disabled = True
+
+    def get_dataMLP(self, lrn, mx, es, ep, de, nhl, nnr1, nnr2):
+        # limpiar lineas si hay
+        self.soft_reset(True)
+        des = 0
+        if (len(self.Entry_x) > 0):
+            lr = self.Learning_rate
+            me = self.Max_epochs
+            if lrn.text != "":
+                try:
+                    lr = float(lrn.text)
+                    if lr <= 0.0:
+                        lr = 0.1
+                        lrn.text = str(lr)
+                except ValueError:
+                    print("Not Float")
+            if mx.text != "":
+                try:
+                    me = int(mx.text)
+                    if me < 1:
+                        me = 100
+                        mx.text = str(me)
+                except ValueError:
+                    print("Not Integer")
+            if de.text != "":
+                try:
+                    des = float(de.text)
+                    # el error solo va de 0 a 1
+                    if des < 0.0 or des > 1.0:
+                        des = 0.1
+                        de.text = str(des)
+                except ValueError:
+                    print("Not Float")
+            es.text = "Training..."
+            self.mlp = True
+            self.start_training(lr, me, des, nhl, nnr1, nnr2)
+            if self.adaline.reachedMax:
+                es.text = "State: " + "Reached Max. Epochs"
+            else:
+                es.text = "State: " + "Trained!"
+            ep.text = "Number of Epochs: " + str(self.adaline.epochs)
+        else:
+            popup = Popup(title='¡Error!',
+                          content=Label(text='You need at least one entry to train '),
+                          size_hint=(None, None), size=(300, 100))
+            popup.open()
+    #para perceptron
     def get_datas(self, lrn, mx, es, ep):
         #limpiar lineas si hay
         self.soft_reset(True)
@@ -334,7 +394,7 @@ class mainMenu(FloatLayout):
             es.text = "Training..."
             self.ada = False
             self.start_training(lr, me, 0)
-            if self.adaline.nonlinear==True:
+            if self.adaline.nonlinear == True:
                 es.text = "Non Linear"
             else:
                 es.text = "Trained!"
