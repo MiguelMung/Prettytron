@@ -67,7 +67,6 @@ class Adaline:
         while (self.error != self.desired_error and self.epochs < self.max_epochs):
             self.set_time(self.weights[0], self.weights[1], self.weights[2])
             errAcumulado = 0
-            print("hello")
             print(self.entries)
             for i in range(0, len(self.entries)):
                 # obteniendo el error

@@ -160,6 +160,162 @@
                 do_default_tab: False
                 tab_width: 80
                 on_touch_down: root.changeClass3(cl3, tabsitas)
+####
+                TabbedPanelItem:
+                    size_hint_x: .25
+                    text: 'MLP'
+                    BoxLayout:
+                        spacing:20
+                        orientation: 'vertical'
+                        size_hint_x: .95
+
+                        canvas:
+                            Color:
+                                rgba: 1, 1, 1, .9
+                            Rectangle:
+                                pos: (self.pos[0]-10,self.pos[1]+20)
+                                size: (self.size[0]+35,self.size[1]-20)
+                                source: "Img/fa.jpg"
+                        Label:
+                            text: "Training"
+                            size_hint_y: .1
+
+                        GridLayout:
+
+                            rows: 3
+                            cols: 3
+                            size_hint_y: .9
+                            size_hint_x: 1.5
+                            spacing: (10,10)
+
+
+                            Label:
+                                text: "Learning rate:"
+                            TextInput:
+                                input_filter: 'float'
+                                id: lrnMLP
+                                multiline: False
+                                font_size: 14
+                                hint_text: "0.3"
+                                pos_hint:{"x": 0.2, 'y':0}
+                                size_hint_x: None
+                            Label:
+
+                            Label:
+                                text: "Max Epochs:"
+                            TextInput:
+                                input_filter: 'int'
+                                id: mxMLP
+                                multiline: False
+                                hint_text: "400"
+                                pos_hint:{"x": 0.1, 'y':0}
+                                size_hint_x: None
+                            Label:
+
+                            Label:
+                                text: "Desired Error:"
+                            TextInput:
+                                input_filter: 'float'
+                                id: deMLP
+                                multiline: False
+                                hint_text: "0"
+                                pos_hint:{"x": 0.1, 'y':0}
+                                size_hint_x: None
+                            Label:
+
+                        GridLayout:
+
+                            rows: 3
+                            cols: 4
+                            size_hint_y: .8
+                            size_hint_x: 1.5
+                            spacing: (10,10)
+                            Label:
+                                text: "Hidden Layers:"
+                            Slider:
+                                id: noHl
+                                range: 1, 2
+                                step: 1
+                                value: 1
+                                on_touch_up: root.changeSliderStatus(noHl.value, noNr2)
+                            Label:
+                                size_hint_x: None
+                                text: str(noHl.value)
+                            Label:
+
+                            Label:
+                                text: "No. Neurons L1:"
+                            Slider:
+                                id: noNr1
+                                range: 1, 10
+                                step: 1
+                                value: 2
+                            Label:
+                                size_hint_x: None
+                                text: str(noNr1.value)
+                            Label:
+
+                            Label:
+                                text: "No. Neurons L2:"
+                            Slider:
+                                id: noNr2
+                                range: 1, 10
+                                step: 1
+                                value: 2
+                                disabled: True
+                            Label:
+                                size_hint_x: None
+                                text: str(noNr2.value)
+                            Label:
+
+                        Button:
+                            size_hint_y: .1
+                            size_hint_x: .3
+                            pos_hint:{"x": 0.35, 'y':0}
+                            id: train
+                            text: "Train"
+                            on_release: root.get_dataMLP(lrnMLP, mxMLP, state3, epoch3, deMLP, noHl.value, noNr1.value, noNr2.value)
+
+                        BoxLayout:
+                            size_hint_y: .1
+                            size_hint_x: .4
+                            pos_hint:{"x": 0.25, 'y':0}
+                            Label:
+                                id: state3
+                                text: "State: "
+                            Label:
+
+
+                        Label:
+                            id: epoch3
+                            text: "Number of Epochs: "
+                            pos_hint:{"x": 0.09, 'y':0}
+                            size_hint_y: .03
+                            size_hint_x: .4
+
+
+                        Label:
+                            size_hint_y: .5
+                            canvas:
+                                Color:
+                                    rgba: 1, 1, 1, .9
+                                Rectangle:
+                                    pos: (self.pos[0]-10,self.pos[1])
+                                    size: (self.size[0]+35,self.size[1]-15)
+                                    source: "Img/22.png"
+                        Label:
+                            text:"Testing"
+                            size_hint_y: .2
+
+                        Button:
+                            text:"Test"
+                            size_hint_y: .1
+                            size_hint_x: .3
+                            pos_hint:{"x": 0.35, 'y':0}
+                            on_release: root.test()
+                        Label:
+                            size_hint_y: .3
+
 
                 TabbedPanelItem:
                     size_hint_x: .25
@@ -496,162 +652,6 @@
                             on_release: root.comparar()
                         Label:
                             size_hint_y: .3
-####
-                TabbedPanelItem:
-                    size_hint_x: .25
-                    text: 'MLP'
-                    BoxLayout:
-                        spacing:20
-                        orientation: 'vertical'
-                        size_hint_x: .95
-
-                        canvas:
-                            Color:
-                                rgba: 1, 1, 1, .9
-                            Rectangle:
-                                pos: (self.pos[0]-10,self.pos[1]+20)
-                                size: (self.size[0]+35,self.size[1]-20)
-                                source: "Img/fa.jpg"
-                        Label:
-                            text: "Training"
-                            size_hint_y: .1
-
-                        GridLayout:
-
-                            rows: 3
-                            cols: 3
-                            size_hint_y: .9
-                            size_hint_x: 1.5
-                            spacing: (10,10)
-
-
-                            Label:
-                                text: "Learning rate:"
-                            TextInput:
-                                input_filter: 'float'
-                                id: lrnMLP
-                                multiline: False
-                                font_size: 14
-                                hint_text: "0.1"
-                                pos_hint:{"x": 0.2, 'y':0}
-                                size_hint_x: None
-                            Label:
-
-                            Label:
-                                text: "Max Epochs:"
-                            TextInput:
-                                input_filter: 'int'
-                                id: mxMLP
-                                multiline: False
-                                hint_text: "100"
-                                pos_hint:{"x": 0.1, 'y':0}
-                                size_hint_x: None
-                            Label:
-
-                            Label:
-                                text: "Desired Error:"
-                            TextInput:
-                                input_filter: 'float'
-                                id: deMLP
-                                multiline: False
-                                hint_text: "0"
-                                pos_hint:{"x": 0.1, 'y':0}
-                                size_hint_x: None
-                            Label:
-
-                        GridLayout:
-
-                            rows: 3
-                            cols: 4
-                            size_hint_y: .8
-                            size_hint_x: 1.5
-                            spacing: (10,10)
-                            Label:
-                                text: "Hidden Layers:"
-                            Slider:
-                                id: noHl
-                                range: 1, 2
-                                step: 1
-                                value: 1
-                                on_touch_up: root.changeSliderStatus(noHl.value, noNr2)
-                            Label:
-                                size_hint_x: None
-                                text: str(noHl.value)
-                            Label:
-
-                            Label:
-                                text: "No. Neurons L1:"
-                            Slider:
-                                id: noNr1
-                                range: 1, 10
-                                step: 1
-                                value: 1
-                            Label:
-                                size_hint_x: None
-                                text: str(noNr1.value)
-                            Label:
-
-                            Label:
-                                text: "No. Neurons L2:"
-                            Slider:
-                                id: noNr2
-                                range: 1, 10
-                                step: 1
-                                value: 1
-                                disabled: True
-                            Label:
-                                size_hint_x: None
-                                text: str(noNr2.value)
-                            Label:
-
-                        Button:
-                            size_hint_y: .1
-                            size_hint_x: .3
-                            pos_hint:{"x": 0.35, 'y':0}
-                            id: train
-                            text: "Train"
-                            on_release: root.get_dataMLP(lrnMLP, mxMLP, state3, epoch3, deMLP, nHl.value, noNr1.value, noNr2.value)
-
-                        BoxLayout:
-                            size_hint_y: .1
-                            size_hint_x: .4
-                            pos_hint:{"x": 0.25, 'y':0}
-                            Label:
-                                id: state3
-                                text: "State: "
-                            Label:
-
-
-                        Label:
-                            id: epoch3
-                            text: "Number of Epochs: "
-                            pos_hint:{"x": 0.09, 'y':0}
-                            size_hint_y: .03
-                            size_hint_x: .4
-
-
-                        Label:
-                            size_hint_y: .5
-                            canvas:
-                                Color:
-                                    rgba: 1, 1, 1, .9
-                                Rectangle:
-                                    pos: (self.pos[0]-10,self.pos[1])
-                                    size: (self.size[0]+35,self.size[1]-15)
-                                    source: "Img/22.png"
-                        Label:
-                            text:"Testing"
-                            size_hint_y: .2
-
-                        Button:
-                            text:"Test"
-                            size_hint_y: .1
-                            size_hint_x: .3
-                            pos_hint:{"x": 0.35, 'y':0}
-                            on_release: root.test()
-                        Label:
-                            size_hint_y: .3
-
             BoxLayout:
                 size_hint_x: .1
 

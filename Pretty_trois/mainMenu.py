@@ -27,12 +27,13 @@ class mainMenu(FloatLayout):
     anima = False           #Animacion Encendida
     perceptron =None        #declarando el simple
     vuelta = 0              #Vuelta de la animacion
-    ada = True              #Define si usar el adaline o el perceptron
+    ada = False              #Define si usar el adaline o el perceptron
     mlp = False             #Define si usar el MLP
     S= False
     A= False
     Sw=[]
     Aw=[]
+    mlp_sec = False
 
     # Constructor
     def __init__(self, **kwargs):
@@ -78,8 +79,11 @@ class mainMenu(FloatLayout):
             for i in range(0, len(self.Wish_y)):
                 if self.Wish_y[i] == 0:
                     s = "Img/fa.png"
-                else:
+                elif self.Wish_y[i]== 1:
                     s = "Img/tu.png"
+                elif self.Wish_y[i] == 2:
+                    s = "Img/lu.png"
+
                 Color(1, 1, 1, mode='rgv')
                 NewValuex = self.changeRange(5, -5, 412, (412 - 370), self.Entry_x[i][1])
                 NewValuey = self.changeRange(5, -5, (180 + 370), 180, self.Entry_x[i][2])
@@ -120,7 +124,8 @@ class mainMenu(FloatLayout):
     def draw_umbral(self, *args):
         if self.anima:
             tam = len(self.adaline.time_weights)
-            self.soft_reset(False)
+            if self.mlp==False:
+                self.soft_reset(False)
             if tam > 0:
                 self.draw_w(self.adaline.time_weights[0], [1, 0, 0])
                 if 0 < self.vuelta < (tam - 1):
@@ -173,26 +178,31 @@ class mainMenu(FloatLayout):
             NewValuey = self.changeRange(5, -5, (180 + 370), 180, self.Entry_test[i][2])
             Rectangle(pos=(NewValuex - 10, NewValuey - 10), size=(20, 20), source=s, group="dot")
 
+
     def makeItColorfull(self):
-        with self.canvas:
+            set=[]
+            ub=[]
             x = 42
             y = 180
             while x <= 412:
                 while y <= 550:
                     xa = self.changeRange(412, 42, 5, -5, x)
                     ya = self.changeRange(550, 180, 5, -5, y)
-                    cls = self.adaline.clasify([xa, ya])
+                    cls = self.adaline.predict([[-1.0,float(xa), float(ya)]])
                     d = 2
-                    if cls == 0:
-                        Color(228, 124, 232, 0.5, mode='rgb')
-                    elif cls == 1:
-                        Color(114, 240, 240, 0.5, mode='rgb')
-                    else:
-                        Color(114, 240, 147, 0.5, mode='rgb')
-                    Ellipse(pos=(x - d / 2, y - d / 2), size=(d, d))
-                    y *= 2
-                x *= 2
+                    with self.canvas:
+                        if cls == 0:
+                            Color(0.8941, 0.4863, 0.9098, 0.5, mode='rgb')
+                        elif cls == 1:
+                            Color(0.4471, 0.9412, 0.9412, 0.5, mode='rgb')
+                        else:
+                            Color(0.4471, 0.9412, 0.5765, 0.5, mode='rgb')
+                        Ellipse(pos=(x-d/2, y-d/2), size=(d, d))
+                    y += d
+                y=180
+                x += d
             #poner de nuevo las imagenes
+
 
     def changeClass3(self, cl3, tabs):
         if tabs.current_tab.text == "MLP":
@@ -251,6 +261,7 @@ class mainMenu(FloatLayout):
     # La funcion del click
     def on_touch_up(self, touch):
         # Si fue en el plano
+        #print(touch.pos)
         if 42 < touch.pos[0] < 43+370 and 550 > touch.pos[1] > 180:
             with self.canvas:
                 if self.CH_class ==0:
@@ -274,14 +285,19 @@ class mainMenu(FloatLayout):
         self.reset_graph()
         if self.ada:
             print(self.Entry_x)
+            self.anima = True
             self.adaline = Adaline(lr, me, self.Entry_x, self.Wish_y, de)
             self.get_Compare(1)
         elif self.mlp:
-            self.adaline = multilayer(lr, me, self.Entry_x, self.Wish_y, de, nhl, [nnr1, nnr2])
+            if self.mlp_sec==True:
+                self.adaline = multilayer(lr, me, self.Entry_x, self.Wish_y, de, nhl, [nnr1, nnr2])
+            else:
+                self.adaline = multilayer(lr, me, self.Entry_x, self.Wish_y, de, nhl, [nnr1])
+            self.makeItColorfull()
         else:
             self.adaline = Perceptron(lr, me, self.Entry_x, self.Wish_y)
+            self.anima = True
             self.get_Compare(2)
-        self.anima = True
         self.vuelta = 0
 
     #para adaline
@@ -334,16 +350,19 @@ class mainMenu(FloatLayout):
     def changeSliderStatus(self, no, slider):
         if no == 2:
             slider.disabled = False
+            self.mlp_sec = True
         else:
             slider.disabled = True
+            self.mlp_sec= False
+
 
     def get_dataMLP(self, lrn, mx, es, ep, de, nhl, nnr1, nnr2):
         # limpiar lineas si hay
         self.soft_reset(True)
         des = 0
         if (len(self.Entry_x) > 0):
-            lr = self.Learning_rate
-            me = self.Max_epochs
+            lr = 0.3
+            me = 400
             if lrn.text != "":
                 try:
                     lr = float(lrn.text)
@@ -468,7 +487,6 @@ class mainMenu(FloatLayout):
             we.append(self.Sw[0])
             we.append(self.Sw[len(self.Sw)-1])
             self.draw_com(we)
-
 
     def draw_com(self,we):
         self.soft_reset(False)
