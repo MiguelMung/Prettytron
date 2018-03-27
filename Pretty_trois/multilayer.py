@@ -2,6 +2,7 @@ import random
 from math import exp
 from numpy import array
 
+
 class Layer:
     def __init__(self, num, ant):
         a=ant+1

@@ -520,4 +520,5 @@ class AdalineApp(App):
         Clock.schedule_interval(menu.draw_umbral, 0.05)
         return menu
 
+
 AdalineApp().run()
