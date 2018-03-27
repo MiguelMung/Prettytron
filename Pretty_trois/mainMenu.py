@@ -27,7 +27,7 @@ class mainMenu(FloatLayout):
     anima = False           #Animacion Encendida
     perceptron =None        #declarando el simple
     vuelta = 0              #Vuelta de la animacion
-    ada = False              #Define si usar el adaline o el perceptron
+    ada = False             #Define si usar el adaline o el perceptron
     mlp = False             #Define si usar el MLP
     S= False
     A= False
@@ -48,7 +48,7 @@ class mainMenu(FloatLayout):
         self.clean_labels()
         with self.canvas:
             Color(1, 1, 1, 1, mode='rbg')
-            Rectangle(pos =(42,550-370), size =(370,370), source= "Img/back2.jpg")
+            Rectangle(pos =(41, 550-370), size =(369,370), source= "Img/back2.jpg")
             self.set_lines()
             self.set_other_lines()
         self.Entry_x.clear()
@@ -60,7 +60,7 @@ class mainMenu(FloatLayout):
     def reset_graph(self):
         with self.canvas:
             Color(1, 1, 1, 1, mode='rbg')
-            Rectangle(pos=(40, 121 - 100), size=(370, 100), source="Img/back2.jpg")
+            Rectangle(pos=(40, 21), size=(371, 108), source="Img/back2.jpg")
             self.set_other_lines()
 
     def changeRange(self, oxu, oxl, nxu, nxl, v):
@@ -74,7 +74,7 @@ class mainMenu(FloatLayout):
         #solo limpia las lineas deja de nuevo los puntos
         with self.canvas:
             Color(1, 1, 1, 1, mode='rbg')
-            Rectangle(pos=(42, 550 - 370), size=(370, 370), source="Img/back2.jpg")
+            Rectangle(pos=(41, 550 - 370), size=(369, 370), source="Img/back2.jpg")
             self.set_lines()
             for i in range(0, len(self.Wish_y)):
                 if self.Wish_y[i] == 0:
@@ -105,8 +105,6 @@ class mainMenu(FloatLayout):
         m = 0
         m= multilayer(.5, 20, self.Entry_x, self.Wish_y, 1, 2,[2,3])
 
-
-
     #graficar error
     def draw_error(self, e, t, n):
         with self.canvas:
@@ -115,6 +113,10 @@ class mainMenu(FloatLayout):
             x = t
             y = e
             d = 2
+            if y > 5.9:
+                y = 5.5
+            if y < -5:
+                y = -5
             NewValuex = self.changeRange((n-1), 0, 410, (410 - 370), x)
             NewValuey = self.changeRange(5, -5, (21 + 100), 21, y)
             Ellipse(pos=(NewValuex - d/2, NewValuey - d/2), size=(d, d))
@@ -134,7 +136,7 @@ class mainMenu(FloatLayout):
                     self.draw_w(self.adaline.time_weights[len(self.adaline.time_weights) - 1], [0, 1, 0])
                     self.anima = False
             #graficando el error en adaline
-            if self.ada or self.mlp:
+            if self.ada:
                 if self.vuelta < len(self.adaline.time_errors):
                     self.draw_error(self.adaline.time_errors[self.vuelta], self.vuelta, len(self.adaline.time_errors))
             self.vuelta += 1
@@ -180,8 +182,6 @@ class mainMenu(FloatLayout):
 
 
     def makeItColorfull(self):
-            set=[]
-            ub=[]
             x = 42
             y = 180
             while x <= 412:
@@ -199,9 +199,8 @@ class mainMenu(FloatLayout):
                             Color(0.4471, 0.9412, 0.5765, 0.5, mode='rgb')
                         Ellipse(pos=(x-d/2, y-d/2), size=(d, d))
                     y += d
-                y=180
+                y = 180
                 x += d
-            #poner de nuevo las imagenes
 
 
     def changeClass3(self, cl3, tabs):
@@ -250,13 +249,13 @@ class mainMenu(FloatLayout):
             cont = 0
             for x in range(10):
                 Color(0, 0, 0, .2, mode='rgb')
-                Line(points=(42+cont, 550, 42+cont, 184), width=1)
-                Line(points=(42, 550-cont, 42+370, 550-cont), width=1)
+                Line(points=(41+cont, 550, 41+cont, 184), width=1)
+                Line(points=(41, 550-cont, 41+370, 550-cont), width=1)
                 #cont+=18.6
                 cont += 37.2
         Color( 1, 0, 0, .5, mode='rgb')
-        Line(points= (43 + 185, 550, 43 + 185, 184),width= 1.2)
-        Line(points= (43, 550 - 185, 43 + 370, 550 - 185),width= 1.2)
+        Line(points= (41 + 185, 550, 41 + 185, 184),width= 1.2)
+        Line(points= (41, 550 - 185, 41 + 370, 550 - 185),width= 1.2)
 
     # La funcion del click
     def on_touch_up(self, touch):
@@ -294,6 +293,10 @@ class mainMenu(FloatLayout):
             else:
                 self.adaline = multilayer(lr, me, self.Entry_x, self.Wish_y, de, nhl, [nnr1])
             self.makeItColorfull()
+            #dibujar el error
+            for i in range(0, len(self.adaline.time_errors)):
+                self.draw_error(self.adaline.time_errors[i], i, len(self.adaline.time_errors))
+
         else:
             self.adaline = Perceptron(lr, me, self.Entry_x, self.Wish_y)
             self.anima = True
