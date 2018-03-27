@@ -1,10 +1,8 @@
 import random
 from math import exp
-from numpy import transpose
-
+from numpy import array
 
 class Layer:
-
     def __init__(self, num, ant):
         a=ant+1
         self.num_neu = num
@@ -69,9 +67,16 @@ class multilayer:
             e.append(d[i] - o[i])
         return e
 
+    def _bias(self,m):
+        a = [0 for x in range(len(m) - 1)]
+        for j in range(1, len(m)):
+            a[j - 1] = m[j]
+        return a
+
     # sigmoid
     def F(self, y):
-        round(y,3)
+        if y < 0:
+            return 1 - 1 / (1 + exp(y))
         return 1 / (1 + exp(-y))
 
     def set_error(self,e):
@@ -91,6 +96,8 @@ class multilayer:
            self.layer.append(Layer(self.num_neu[i],car))
            self.layer[i].set_weigths(car)
            car=self.num_neu[i]
+
+
 
 
         self.epochs = 0
@@ -127,27 +134,33 @@ class multilayer:
         return self.layer[i].a_output
 
     def backward_s(self, e):
-        for i in range((self.num_layers-1), 0, -1):
+        for i in range((self.num_layers-1),-1,-1):
+      #  for i in range((self.num_layers - 1), 0, -1):
             for j in range(self.num_neu[i]):
                 if i == self.num_layers - 1:
                     M = self.layer[i]
                     M.sensibility[j] = -2*(self.F(M.nets[j]) * (1 - self.F(M.nets[j])))*(self.desired[e][j]-M.a_output[j])
                 else:
+                    s=0
                     m = self.layer[i]
-                    df = self.F(m.nets[j]) * (1 - self.F(m.nets[j]))
+                    df = round(self.F(m.nets[j]) * (1 - self.F(m.nets[j])), 15)
                     for k in range(self.num_neu[i + 1]):
-                        m.sensibility[j] += df*(transpose(self.layer[i+1].weights[k][i]))* self.layer[i+1].sensibility[k]
+                        w = self._bias(self.layer[i + 1].weights[k])
+                        s +=sum(self.layer[i+1].sensibility[k]*array(df*array(w)))
+                    m.sensibility[j]=s
 
     def backward_a(self, e):
         for i in range(self.num_layers):
             for j in range(self.num_neu[i]):
-                for k in range(3):
                     if i == 0:
-                        incW = -self.learning_rate*self.layer[i].sensibility[j]*self.entries[e][k]
-                        self.layer[i].weights[j][k] += incW
+                        for k in range(3):
+                            incW = -self.learning_rate*self.layer[i].sensibility[j]*self.entries[e][k]
+                            self.layer[i].weights[j][k] = self.layer[i].weights[j][k]+ incW
+
                     else:
-                        if k == 0:
-                            incW = -self.learning_rate * self.layer[i].sensibility[j] * -1
-                        else:
-                            incW = -self.learning_rate * self.layer[i].sensibility[j] *self.layer[i-1].a_output[k-1]
-                        self.layer[i].weights[j][k] += incW
+                        for k in range(self.num_neu[i-1]+1):
+                            if k == 0:
+                                incW = -self.learning_rate * self.layer[i].sensibility[j] * -1
+                            else:
+                                incW = -self.learning_rate * self.layer[i].sensibility[j] *self.layer[i-1].a_output[k-1]
+                            self.layer[i].weights[j][k] += incW
