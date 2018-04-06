@@ -4,75 +4,78 @@ from numpy import array
 
 
 class Layer:
-    def __init__(self, num, ant):
-        a=ant+1
-        self.num_neu = num
-        self.weights = [[0 for x in range(a)] for y in range(num)]
-        self.nets =[0 for x in range(num)]
-        self.a_output =[0 for x in range(num)]
-        self.sensibility=[0 for x in range(num)]
+    def __init__(self, num, a):
+        self.num_neutrons = num
+        self.nets = [0 for _ in range(num)]
+        self.a_output = [0 for _ in range(num)]
+        self.sensibility = [0 for _ in range(num)]
+        self.weights = [[0 for _ in range(a)] for _ in range(num)]
 
-    def set_weigths(self,ant):
-        for n in range(self.num_neu):
-            for m in range(ant+1):
-                self.weights[n][m] =round(random.uniform(-5, 5),5)
+    # inicializando los pesos con valores random entre -5 y 5
+    def set_weights(self, ant):
+        for n in range(self.num_neutrons):
+            for m in range(ant):
+                self.weights[n][m] = round(random.uniform(-5, 5), 5)
 
-class multilayer:
+
+# Cambia las deseadas 0, 1, 2 a [1,0,0], [0,1,0], [0,0,1]
+def set_wish(entry):
+    w = []
+    for i in range(len(entry)):
+        if entry[i] == 0:
+            w.append([1, 0, 0])
+        elif entry[i] == 1:
+            w.append([0, 1, 0])
+        elif entry[i] == 2:
+            w.append([0, 0, 1])
+    return w
+
+
+# Cambia las salidas de [1,0,0], [0,1,0], [0,0,1] a 0, 1, 2
+def get_wish(entry):
+    w = entry.index(max(entry))
+    return w
+
+
+def d_o(d, o):
+    e = []
+    # "Resta de las listas"
+    for i in range(len(d)):
+        e.append(d[i] - o[i])
+    return e
+
+
+def take_of_bias(m):
+    a = [0 for _ in range(len(m) - 1)]
+    for j in range(1, len(m)):
+        a[j - 1] = m[j]
+    return a
+
+
+class Multilayer:
     # constructor
     def __init__(self, lr, me, x, y, de, num_layers, num):
+
+        self.num_layers = num_layers
+        self.desired = set_wish(y)
         self.reachedMax = False
         self.desired_error = de
-        self.error = 0
-        self.layer = []
         self.learning_rate = lr
-        self.max_epochs = me
-        self.num_layers = num_layers + 1 #Para agregar la capa de salida
-        num.append(3)
-        self.num_neu = num
-        self.epochs = 0
-        self.entries = x
-        self.desired = self.set_whist(y)
-        self.weights = []
-        self.time_weights = []
+        self.num_neutrons = num
         self.time_errors = []
+        self.max_epochs = me
+        self.entries = x
+        self.epochs = 0
+        self.layer = []
+        self.error = 0
+
         self.start()
 
-    def set_whist(self, entry):
-        w = []
-        for i in range(len(entry)):
-            if entry[i] == 0:
-                w.append([1, 0, 0])
-            elif entry[i] == 1:
-                w.append([0, 1, 0])
-            elif entry[i] == 2:
-                w.append([0, 0, 1])
-        return (w)
-
-    def get_whist(self, entry):
-        w=entry.index(max(entry))
-        return w
-
-
-
     # clasifica un nuevo set de puntos solo despues de ser entrenado
-    def predict(self,set):
-        outputs = self.forward(0, set)
-        res=self.get_whist(outputs)
-        #print(self.desired)
+    def predict(self, test_set):
+        outputs = self.forward(0, test_set)
+        res = get_wish(outputs)
         return res
-
-    def d_o(self, d,o):
-        e=[]
-        #"Resta de las listas"
-        for i in range(len(d)):
-            e.append(d[i] - o[i])
-        return e
-
-    def _bias(self,m):
-        a = [0 for x in range(len(m) - 1)]
-        for j in range(1, len(m)):
-            a[j - 1] = m[j]
-        return a
 
     # sigmoid
     def F(self, y):
@@ -80,7 +83,7 @@ class multilayer:
             return 1 - 1 / (1 + exp(y))
         return 1 / (1 + exp(-y))
 
-    def set_error(self,e):
+    def set_error(self, e):
         self.time_errors.append(e)
 
     # funcion de transferencia del perceptron
@@ -90,78 +93,88 @@ class multilayer:
             p += w[i] * x[i]
         return p
 
-    def start(self):
-        # inicializando los pesos con valores random entre -5 y 5
-        car =2
+    def set_weights(self):
+        characteristics = 2
         for i in range(0, self.num_layers):
-           self.layer.append(Layer(self.num_neu[i],car))
-           self.layer[i].set_weigths(car)
-           car=self.num_neu[i]
+            self.layer.append(Layer(self.num_neutrons[i], characteristics + 1))
+            self.layer[i].set_weights(characteristics + 1)
+            characteristics = self.num_neutrons[i]
 
-
-
+    def start(self):
 
         self.epochs = 0
-        # para que sea un error diferente al inicio#
+        self.set_weights()  # Inicializa las layers y los pesos de las neuronas
         self.error = self.desired_error + 1
-        u=0
+
         while self.error != self.desired_error and self.epochs < self.max_epochs:
-            errAcumulado = 0
-            for i in range(0, len(self.entries)):
-                y=self.forward(i, self.entries)
-                e=self.d_o(self.desired[i],y)
-                errAcumulado+=self.wa(e,e)
-                self.backward_s(i)
-                self.backward_a(i)
-            self.error = errAcumulado / len(self.entries)
-            self.set_error(errAcumulado)
+            err_acumulado = 0
+            for i in range(len(self.entries)):
+                y = self.forward(i, self.entries)
+                error = d_o(self.desired[i], y)
+                err_acumulado += self.wa(error, error)
+                self.backward_sensitivity(i)
+                self.backward_weight_adjustment(i)
+            self.error = err_acumulado / len(self.entries)
+            self.set_error(err_acumulado)
             self.epochs = self.epochs + 1
-        #si llego al maximo de epocas
+
+        # si llego al maximo de epocas
         if self.epochs >= self.max_epochs:
             self.reachedMax = True
         else:
             self.reachedMax = False
 
-    def forward(self, e, entries):
-        a = entries[e]
+    def forward(self, current, list_of_entries):
+        a = list_of_entries[current]
         for i in range(self.num_layers):
-            a2 = []
-            a2.append(-1)
-            for j in range(self.num_neu[i]):
-                self.layer[i].nets[j]= self.wa(a, self.layer[i].weights[j])
+            aux = []
+            aux.append(-1)
+            for j in range(self.num_neutrons[i]):
+                self.layer[i].nets[j] = self.wa(a, self.layer[i].weights[j])
                 self.layer[i].a_output[j] = self.F(self.layer[i].nets[j])
-                a2.append(self.layer[i].a_output[j])
-            a = a2
+                aux.append(self.layer[i].a_output[j])
+            a = aux
         return self.layer[i].a_output
 
-    def backward_s(self, e):
-        for i in range((self.num_layers-1),-1,-1):
-      #  for i in range((self.num_layers - 1), 0, -1):
-            for j in range(self.num_neu[i]):
+    def backward_sensitivity(self, e):
+        # Loop de capa de salida a la de entrada
+        for i in range((self.num_layers - 1), -1, -1):
+            # Loop de las neuronas en la capa
+            for j in range(self.num_neutrons[i]):
+                # Si es la capa de salida
                 if i == self.num_layers - 1:
                     M = self.layer[i]
-                    M.sensibility[j] = -2*(self.F(M.nets[j]) * (1 - self.F(M.nets[j])))*(self.desired[e][j]-M.a_output[j])
+                    # Sensibility =    -2 * F'(n) * (d-a)
+                    M.sensibility[j] = -2 * (self.F(M.nets[j]) * (1 - self.F(M.nets[j]))) * (
+                            self.desired[e][j] - M.a_output[j])
                 else:
-                    s=0
+                    s = 0
                     m = self.layer[i]
+                    m_1 = self.layer[i + 1]
                     df = round(self.F(m.nets[j]) * (1 - self.F(m.nets[j])), 15)
-                    for k in range(self.num_neu[i + 1]):
-                        w = self._bias(self.layer[i + 1].weights[k])
-                        s +=sum(self.layer[i+1].sensibility[k]*array(df*array(w)))
-                    m.sensibility[j]=s
+                    for k in range(self.num_neutrons[i + 1]):
+                        w = take_of_bias(m_1.weights[k])
+                        s += sum(m_1.sensibility[k] * array(df * array(w)))
+                    m.sensibility[j] = s
 
-    def backward_a(self, e):
+    def backward_weight_adjustment(self, e):
+        # Loop de las capas
         for i in range(self.num_layers):
-            for j in range(self.num_neu[i]):
-                    if i == 0:
-                        for k in range(3):
-                            incW = -self.learning_rate*self.layer[i].sensibility[j]*self.entries[e][k]
-                            self.layer[i].weights[j][k] = self.layer[i].weights[j][k]+ incW
+            # Loop de las neuronas por capa
+            for j in range(self.num_neutrons[i]):
+                # Si es la primera capa
+                if i == 0:
+                    # Loop por pesos a ajustar
+                    for k in range(3):
+                        increment_of_weight = -self.learning_rate * self.layer[i].sensibility[j] * self.entries[e][k]
+                        self.layer[i].weights[j][k] += increment_of_weight
 
-                    else:
-                        for k in range(self.num_neu[i-1]+1):
-                            if k == 0:
-                                incW = -self.learning_rate * self.layer[i].sensibility[j] * -1
-                            else:
-                                incW = -self.learning_rate * self.layer[i].sensibility[j] *self.layer[i-1].a_output[k-1]
-                            self.layer[i].weights[j][k] += incW
+                else:
+                    # Loop por pesos a ajustar
+                    for k in range(self.num_neutrons[i - 1] + 1):
+                        if k == 0:
+                            increment_of_weight = -self.learning_rate * self.layer[i].sensibility[j] * -1
+                        else:
+                            increment_of_weight = -self.learning_rate * self.layer[i].sensibility[j] * self.layer[i - 1].a_output[
+                                k - 1]
+                        self.layer[i].weights[j][k] += increment_of_weight

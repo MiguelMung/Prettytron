@@ -189,7 +189,7 @@ class mainMenu(FloatLayout):
                     xa = self.changeRange(412, 42, 5, -5, x)
                     ya = self.changeRange(550, 180, 5, -5, y)
                     cls = self.adaline.predict([[-1.0,float(xa), float(ya)]])
-                    d = 2
+                    d = 6
                     with self.canvas:
                         if cls == 0:
                             Color(0.8941, 0.4863, 0.9098, 0.5, mode='rgb')
@@ -288,10 +288,11 @@ class mainMenu(FloatLayout):
             self.adaline = Adaline(lr, me, self.Entry_x, self.Wish_y, de)
             self.get_Compare(1)
         elif self.mlp:
+            # Para agregar la capa de salida nhl +1 y para agregar su numero de neuronas , 3]
             if self.mlp_sec==True:
-                self.adaline = multilayer(lr, me, self.Entry_x, self.Wish_y, de, nhl, [nnr1, nnr2])
+                self.adaline = Multilayer(lr, me, self.Entry_x, self.Wish_y, de, nhl+1, [nnr1, nnr2, 3])
             else:
-                self.adaline = multilayer(lr, me, self.Entry_x, self.Wish_y, de, nhl, [nnr1])
+                self.adaline = Multilayer(lr, me, self.Entry_x, self.Wish_y, de, nhl+1, [nnr1, 3])
             self.makeItColorfull()
             #dibujar el error
             for i in range(0, len(self.adaline.time_errors)):
