@@ -1,0 +1,708 @@
+#Base de la ventana
+<mainMenu>:
+    FloatLayout:
+
+        #Se pinta la imagen de fondo
+        canvas:
+            Rectangle:
+                pos: self.pos
+                size: self.size
+                source: "Img/back.jpg"
+
+        #Contiene el btn de prueba y lbl plano
+        BoxLayout:
+            height: "30dp"
+            size_hint_y: None
+            pos_hint: {"x": 0, 'y': .95}
+            Button:
+                id: dumy
+                size_hint_x: .04
+                on_press: root.pr_f()
+            Label:
+                color: 1,0,1,1
+                text:"Plane"
+            Label:
+                size_hint_x: .8
+
+
+        BoxLayout:
+            size_hint_y: None
+            pos_hint: {"x": 0, 'y': 0}
+            height: "570dp"
+
+            BoxLayout:
+
+                orientation: 'vertical'
+                size_hint_x: 1.4
+
+
+
+                Label:
+                    size_hint_y: None
+                    size_hint_x: None
+                    height: "20dp"
+
+                Label:
+                    id: plane
+                    text: "hello"
+                    size_hint_y: None
+                    size_hint_x: None
+                    pos_hint: {"x": 0.09, 'y': 0}
+                    height: "370dp"
+                    width:  "370dp"
+                    canvas:
+
+                        Color:
+                            rgba: 1, 0, 1, .8
+                        Line:
+                            width: 2.
+                            rectangle: (self.x, self.y, self.width, self.height)
+                        Color:
+                            rgba: 1, 1, 1, 1
+                        Rectangle:
+                            pos: self.pos
+                            size: self.size
+                        Color:
+                            rgba: 1, 0, 0, .5
+                        Line:
+                            points: (43+185, 550, 43+185, 184)
+                            width: 1.2
+
+                        Line:
+                            points: (43, 550-185, 43+370, 550-185)
+                            width: 1.2
+                Label:
+                    id: lab
+                    size_hint_y: .04
+
+                BoxLayout:
+                    pos_hint_y: None
+                    size_hint_x: .89
+                    size_hint_y: 0.1
+                    Label:
+                        size_hint_x: .08
+
+
+                    ToggleButton:
+                        pos_hint_y: None
+                        group: "chclass"
+                        size_hint_x: .15
+
+
+                        pos_hint: {"x": 0.8, 'y': 0}
+                        text: "Class1"
+                        id: cl1
+                        state: 'down'
+                        on_release: root.CH_class = 0
+
+                    ToggleButton:
+                        pos_hint: {"x": 0.6, 'y': 0}
+                        group: "chclass"
+                        size_hint_x: .15
+
+
+                        text: "Class2"
+                        id: cl2
+                        on_release: root.CH_class = 1
+
+                    ToggleButton:
+                        pos_hint: {"x": 0.6, 'y': 0}
+                        group: "chclass"
+                        size_hint_x: .15
+
+
+                        text: "Class3"
+                        id: cl3
+                        disabled: True
+                        on_release: root.CH_class = 2
+
+                    Label:
+                        size_hint_x: .3
+                        halign: 'left'
+
+                    Button:
+
+                        size_hint_x: .15
+                        text: "Reset"
+                        on_press: root.reset()
+                Label:
+                    size_hint_y: .1
+
+                Label:
+                    id: graph
+                    size_hint_y: .5
+                    size_hint_x: None
+                    pos_hint: {"x": 0.09, 'y': 0}
+                    height: "100dp"
+                    width:  "370dp"
+                    canvas:
+                        Color:
+                            rgba: 1, 0, 1, .8
+                        Line:
+                            width: 2.
+                            rectangle: (self.x, self.y, self.width, self.height)
+                        Color:
+                            rgba: 1, 1, 1, 1
+                        Rectangle:
+                            pos: self.pos
+                            size: self.size
+
+                Label:
+                    size_hint_y: .1
+                    color: 1,0,1,1
+                    text:"Number of Epochs"
+
+
+
+            TabbedPanel:
+                id: tabsitas
+                background_color: (1, 1, 1, 0)
+                do_default_tab: False
+                tab_width: 80
+                on_touch_down: root.changeClass3(cl3, tabsitas)
+####
+                TabbedPanelItem:
+                    size_hint_x: .25
+                    text: 'MLP'
+                    BoxLayout:
+                        spacing:20
+                        orientation: 'vertical'
+                        size_hint_x: .95
+
+                        canvas:
+                            Color:
+                                rgba: 1, 1, 1, .9
+                            Rectangle:
+                                pos: (self.pos[0]-10,self.pos[1]+20)
+                                size: (self.size[0]+35,self.size[1]-20)
+                                source: "Img/fa.jpg"
+                        Label:
+                            text: "Training"
+                            size_hint_y: .1
+
+                        GridLayout:
+
+                            rows: 3
+                            cols: 3
+                            size_hint_y: .9
+                            size_hint_x: 1.5
+                            spacing: (10,10)
+
+
+                            Label:
+                                text: "Learning rate:"
+                            TextInput:
+                                input_filter: 'float'
+                                id: lrnMLP
+                                multiline: False
+                                font_size: 14
+                                hint_text: "0.3"
+                                pos_hint:{"x": 0.2, 'y':0}
+                                size_hint_x: None
+                            Label:
+
+                            Label:
+                                text: "Max Epochs:"
+                            TextInput:
+                                input_filter: 'int'
+                                id: mxMLP
+                                multiline: False
+                                hint_text: "200"
+                                pos_hint:{"x": 0.1, 'y':0}
+                                size_hint_x: None
+                            Label:
+
+                            Label:
+                                text: "Desired Error:"
+                            TextInput:
+                                input_filter: 'float'
+                                id: deMLP
+                                multiline: False
+                                hint_text: "0"
+                                pos_hint:{"x": 0.1, 'y':0}
+                                size_hint_x: None
+                            Label:
+
+                        GridLayout:
+
+                            rows: 3
+                            cols: 4
+                            size_hint_y: .8
+                            size_hint_x: 1.5
+                            spacing: (10,10)
+                            Label:
+                                text: "Hidden Layers:"
+                            Slider:
+                                id: noHl
+                                range: 1, 2
+                                step: 1
+                                value: 1
+                                on_touch_up: root.changeSliderStatus(noHl.value, noNr2)
+                            Label:
+                                size_hint_x: None
+                                text: str(noHl.value)
+                            Label:
+
+                            Label:
+                                text: "No. Neurons L1:"
+                            Slider:
+                                id: noNr1
+                                range: 2, 10
+                                step: 1
+                                value: 2
+                            Label:
+                                size_hint_x: None
+                                text: str(noNr1.value)
+                            Label:
+
+                            Label:
+                                text: "No. Neurons L2:"
+                            Slider:
+                                id: noNr2
+                                range: 2, 10
+                                step: 1
+                                value: 2
+                                disabled: True
+                            Label:
+                                size_hint_x: None
+                                text: str(noNr2.value)
+                            Label:
+
+                        Button:
+                            size_hint_y: .1
+                            size_hint_x: .3
+                            pos_hint:{"x": 0.35, 'y':0}
+                            id: train
+                            text: "Train"
+                            on_release: root.get_dataMLP(lrnMLP, mxMLP, state3, epoch3, deMLP, noHl.value, noNr1.value, noNr2.value)
+
+                        BoxLayout:
+                            size_hint_y: .1
+                            size_hint_x: .4
+                            pos_hint:{"x": 0.25, 'y':0}
+                            Label:
+                                id: state3
+                                text: "State: "
+                            Label:
+
+
+                        Label:
+                            id: epoch3
+                            text: "Number of Epochs: "
+                            pos_hint:{"x": 0.09, 'y':0}
+                            size_hint_y: .03
+                            size_hint_x: .4
+
+
+                        Label:
+                            size_hint_y: .5
+                            canvas:
+                                Color:
+                                    rgba: 1, 1, 1, .9
+                                Rectangle:
+                                    pos: (self.pos[0]-10,self.pos[1])
+                                    size: (self.size[0]+35,self.size[1]-15)
+                                    source: "Img/22.png"
+                        Label:
+                            text:"Testing"
+                            size_hint_y: .2
+
+                        Button:
+                            text:"Test"
+                            size_hint_y: .1
+                            size_hint_x: .3
+                            pos_hint:{"x": 0.35, 'y':0}
+                            on_release: root.test()
+                        Label:
+                            size_hint_y: .3
+
+
+                TabbedPanelItem:
+                    size_hint_x: .25
+                    text: 'Adaline'
+                    BoxLayout:
+                        spacing:20
+                        orientation: 'vertical'
+                        size_hint_x: .95
+
+                        canvas:
+                            Color:
+                                rgba: 1, 1, 1, .9
+                            Rectangle:
+                                pos: (self.pos[0]-10,self.pos[1]+20)
+                                size: (self.size[0]+35,self.size[1]-20)
+                                source: "Img/fa.jpg"
+                        Label:
+                            text: "Training"
+                            size_hint_y: .1
+
+                        GridLayout:
+
+                            rows: 3
+                            cols: 3
+                            size_hint_y: .6
+                            spacing: (1,10)
+                            Label:
+                                text: "Learning rate:"
+
+                            TextInput:
+                                input_filter: 'float'
+                                id: lrnrtA
+                                multiline: False
+                                font_size: 14
+                                hint_text: "0.1"
+                                pos_hint:{"x": 0.2, 'y':0}
+                                size_hint_x: None
+
+
+                            Label:
+
+
+                            Label:
+
+                                text: "Max Epochs:"
+
+                            TextInput:
+                                input_filter: 'int'
+                                id: mxepA
+                                multiline: False
+                                hint_text: "100"
+                                pos_hint:{"x": 0.1, 'y':0}
+                                size_hint_x: None
+                            Label:
+
+                            Label:
+
+                                text: "Desired Error:"
+
+                            TextInput:
+                                input_filter: 'float'
+                                id: deA
+                                multiline: False
+                                hint_text: "0"
+                                pos_hint:{"x": 0.1, 'y':0}
+                                size_hint_x: None
+
+
+
+
+
+                        Button:
+                            size_hint_y: .1
+                            size_hint_x: .3
+                            pos_hint:{"x": 0.35, 'y':0}
+                            id: train
+                            text: "Train"
+                            on_release: root.get_data(lrnrtA, mxepA, state2,epoch2,deA)
+
+                        BoxLayout:
+                            size_hint_y: .1
+                            size_hint_x: .4
+                            pos_hint:{"x": 0.25, 'y':0}
+                            Label:
+                                id: state2
+                                text: "State: "
+                            Label:
+
+
+                        Label:
+                            id: epoch2
+                            text: "Number of Epochs: "
+                            pos_hint:{"x": 0.09, 'y':0}
+                            size_hint_y: .03
+                            size_hint_x: .4
+
+
+                        Label:
+                            size_hint_y: .2
+                            canvas:
+                                Color:
+                                    rgba: 1, 1, 1, .9
+                                Rectangle:
+                                    pos: (self.pos[0]-10,self.pos[1])
+                                    size: (self.size[0]+35,self.size[1]-15)
+                                    source: "Img/22.png"
+                        Label:
+                            text:"Testing"
+                            size_hint_y: .2
+
+                        ToggleButton:
+
+                            text:"New dot"
+                            size_hint_y: .1
+                            size_hint_x: .3
+                            pos_hint:{"x": 0.35, 'y':0}
+                            group: "chclass"
+                            on_release: root.CH_class = 3
+
+
+                        Button:
+                            text:"Test"
+                            size_hint_y: .1
+                            size_hint_x: .3
+                            pos_hint:{"x": 0.35, 'y':0}
+                            on_release: root.test()
+                        Label:
+                            size_hint_y: .3
+##
+                TabbedPanelItem:
+                    size_hint_x: .25
+                    text: 'Perceptron'
+                    BoxLayout:
+                        spacing:20
+                        orientation: 'vertical'
+                        size_hint_x: .95
+                        canvas:
+                            Color:
+                                rgba: 1, 1, 1, .9
+                            Rectangle:
+                                pos: (self.pos[0]-10,self.pos[1]+20)
+                                size: (self.size[0]+35,self.size[1]-20)
+                                source: "Img/fa.jpg"
+                        Label:
+                            text: "Training"
+                            size_hint_y: .1
+
+                        GridLayout:
+                            rows: 2
+                            cols: 3
+                            size_hint_y: .3
+                            spacing: (1,10)
+                            Label:
+                                text: "Learning_rate:"
+                            TextInput:
+                                input_filter: 'float'
+                                id: lrnrt
+                                multiline: False
+                                font_size: 14
+                                hint_text: "0.1"
+                                pos_hint:{"x": 0.2, 'y':0}
+                                size_hint_x: None
+                            Label:
+                            Label:
+
+                                text: "Max_Epochs:"
+                            TextInput:
+                                input_filter: 'int'
+                                id: mxep
+                                multiline: False
+                                hint_text: "100"
+                                pos_hint:{"x": 0.1, 'y':0}
+                                size_hint_x: None
+                        Button:
+                            size_hint_y: .1
+                            size_hint_x: .3
+                            pos_hint:{"x": 0.35, 'y':0}
+                            id: train
+                            text: "Train"
+
+                            on_release: root.get_datas(lrnrt, mxep, state,epoch)
+                        BoxLayout:
+                            size_hint_y: .1
+                            size_hint_x: .4
+                            Label:
+                                text: "State: "
+                            Label:
+                                id: state
+                                text: "Untrained"
+                        Label:
+                            id: epoch
+                            text: "Number of Epochs: "
+                            pos_hint:{"x": 0.05, 'y':0}
+                            size_hint_y: .03
+                            size_hint_x: .4
+                        Label:
+                            size_hint_y: .2
+                            canvas:
+                                Color:
+                                    rgba: 1, 1, 1, .9
+                                Rectangle:
+                                    pos: (self.pos[0]-10,self.pos[1])
+                                    size: (self.size[0]+35,self.size[1]-15)
+                                    source: "Img/22.png"
+                        Label:
+                            text:"Testing"
+                            size_hint_y: .2
+                        ToggleButton:
+                            text:"New dot"
+                            size_hint_y: .1
+                            size_hint_x: .3
+                            pos_hint:{"x": 0.35, 'y':0}
+                            group: "chclass"
+                            on_release: root.CH_class = 3
+                        Button:
+                            text:"Test"
+                            size_hint_y: .1
+                            size_hint_x: .3
+                            pos_hint:{"x": 0.35, 'y':0}
+                            on_release: root.test()
+                        Label:
+                            size_hint_y: .3
+###
+                TabbedPanelItem:
+                    size_hint_x: .25
+                    text: 'Compare'
+                    BoxLayout:
+                        spacing:20
+                        orientation: 'vertical'
+                        size_hint_x: .95
+                        canvas:
+                            Color:
+                                rgba: 1, 1, 1, .9
+                            Rectangle:
+                                pos: (self.pos[0]-10,self.pos[1]+20)
+                                size: (self.size[0]+35,self.size[1]-20)
+                                source: "Img/fa.jpg"
+                        Label:
+                            size_hint_y: .1
+                        Label:
+                            text: "[b][i][color=#f44242]Adaline[/i][/b]"
+                            markup:True
+                            size_hint_y: .1
+                        Label:
+                            id: a_s
+                            text: "State:"
+                            markup:True
+                            size_hint_y: .1
+                        Label:
+                            id: a_l
+                            markup:True
+                            text: "Learning rate:"
+                            size_hint_y: .1
+                        Label:
+                            id: a_m
+                            markup:True
+                            text: "Max Epochs:"
+                            size_hint_y: .1
+                        Label:
+                            id: a_n
+                            text: "Number Epochs:"
+                            markup:True
+                            size_hint_y: .1
+                        Label:
+                            id: a_d
+                            text: "Desired error:"
+                            size_hint_y: .1
+                            markup:True
+                        Label:
+                            id: a_f
+                            text: "Final error:"
+                            size_hint_y: .1
+                            markup:True
+                        Label:
+                            text: "[b][color=#f4f75b]Initial weight[/b]"
+                            size_hint_y: .1
+                            markup:True
+                        Label:
+                            id: a_iw
+                            size_hint_y: .1
+                        Label:
+                            text: "[b][color=#f49a55]Final weight[/b]"
+                            size_hint_y: .1
+                            markup:True
+                        Label:
+                            id: a_fw
+                            size_hint_y: .1
+
+
+                        Label:
+                            text: "[b][i][color=#77ff92]Simple[/b][/i]"
+                            markup:True
+                            size_hint_y: .1
+                        Label:
+                            id: s_s
+                            markup:True
+                            text: "State:"
+                            size_hint_y: .1
+                        Label:
+                            id: s_l
+                            markup:True
+                            text: "Learning rate:"
+                            size_hint_y: .1
+                        Label:
+                            id: s_m
+                            markup:True
+                            text: "Max Epochs:"
+                            size_hint_y: .1
+                        Label:
+                            id: s_n
+                            markup:True
+                            text: "Number Epochs:"
+                            size_hint_y: .1
+                        Label:
+                            markup:True
+                            text: "[b][color=#99fcf4]Initial weight[/b]"
+                            size_hint_y: .1
+                        Label:
+                            id: s_iw
+                            size_hint_y: .1
+                        Label:
+                            text: "[b][color=#77ff92]Final weight[/b]"
+                            markup:True
+                            size_hint_y: .1
+                        Label:
+                            id: s_fw
+                            size_hint_y: .1
+                        Label:
+                            size_hint_y: .1
+                        Button:
+                            size_hint_x: .4
+                            size_hint_y: .3
+                            text: "Compare"
+                            pos_hint:{"x": 0.3, 'y':0}
+                            on_release: root.comparar()
+                        Label:
+                            size_hint_y: .3
+            BoxLayout:
+                size_hint_x: .1
+
+    Label:
+
+        color: .1,.4,.1, 1
+        size_hint_y: None
+        size_hint_x: None
+        pos_hint: {"x": 0.23, 'y': 0.85}
+        text: "y: 5"
+        font_size: 15
+    Label:
+        color: .1,.4,.1, 1
+        size_hint_y: None
+        size_hint_x: None
+        pos_hint: {"x": 0.23, 'y': 0.2}
+        text: "y: -5"
+        font_size: 15
+    Label:
+        color: .1,.4,.1, 1
+        size_hint_y: None
+        size_hint_x: None
+        pos_hint: {"x": -0.03, 'y': 0.52}
+        text: "x: -5"
+        font_size: 15
+    Label:
+        color: .1,.4,.1, 1
+        size_hint_y: None
+        size_hint_x: None
+        pos_hint: {"x": 0.47, 'y': 0.52}
+        text: "x: 5"
+        font_size: 15
+    Label:
+        color: .1,.4,.1, 1
+        size_hint_y: None
+        size_hint_x: None
+        pos_hint: {"x": -0.03, 'y': 0.12}
+        text: "5"
+        font_size: 15
+    Label:
+        color: .1,.4,.1, 1
+        size_hint_y: None
+        size_hint_x: None
+        pos_hint: {"x": -0.03, 'y': -0.05}
+        text: "-5"
+        font_size: 15
+    Label:
+        color: 1,0,1,1
+        size_hint_y: None
+        size_hint_x: None
+        pos_hint: {"x": -0.03, 'y': 0.04}
+        text: "E"
+        font_size: 15
