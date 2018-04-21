@@ -62,6 +62,7 @@ class MainMenu(BoxLayout):
         with graph.canvas:
             Color(0.78, 0.54, 0.84, 1, mode='rgb')
             Rectangle(pos=(graph.pos), size=(graph.size))
+
     #graficando funcion original
     def graphFunction(self, f):
         graph = self.ids.functionGraph
@@ -85,7 +86,7 @@ class MainMenu(BoxLayout):
                 NewValuey = self.changeRange(10, -10, yf, yi, y)
                 Color(0.2, 0, 0.8, 1, mode='rgb')
                 Ellipse(pos=(NewValuex - d / 2, NewValuey - d / 2), size=(d, d))
-                x += 0.05
+                x += 0.01
 
     #graficar error
     def draw_error(self, e, t, n):
@@ -208,12 +209,14 @@ class MainMenu(BoxLayout):
     #tomar datos del usuario
     def getData(self, mx, ngss, de, func, reachedEp, reachedEr, functionGraph, errorGraph):
         #limpiar lineas si hay
-        self.soft_reset(True)
+        self.soft_reset()
+        self.set_lines()
+        self.graphFunction(func)
         if(len(self.entry_x) > 0):
             me = self.max_epochs
             ng = self.n_gauss
             des = self.desired_error
-            f = func.text
+            f = func
             if mx.text != "":
                 try:
                     me = int(mx.text)
