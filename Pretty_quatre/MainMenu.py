@@ -1,4 +1,6 @@
 ###---------Imports---------###
+import math
+
 from kivy.app import App
 from kivy.clock import Clock
 from kivy.config import Config
@@ -61,17 +63,38 @@ class MainMenu(BoxLayout):
             Color(0.78, 0.54, 0.84, 1, mode='rgb')
             Rectangle(pos=(graph.pos), size=(graph.size))
     #graficando funcion original
-    #def graphFunction(self, f):
-
+    def graphFunction(self, f):
+        graph = self.ids.functionGraph
+        with graph.canvas:
+            x = 0
+            while x < 50:
+                if f == 'cos(x)':
+                    y = math.cos(x)
+                elif f == '2*sin(x)*cos(x)+cos(x)':
+                    y = 2*math.sin(x)*math.cos(x)+math.cos(x)
+                elif f == '3*sin(x)^4+5*sin(x)^2+2*cos(x)^5':
+                    y = 3 * math.pow(math.sin(x), 4) + 5 * math.pow(math.sin(x), 2) + 2 * math.pow(math.cos(x), 5)
+                else:
+                    y = math.e + 2 * math.pow(math.cos(x), 5) + math.sin(x)
+                d = 2
+                xi = graph.pos[0]
+                xf = graph.pos[0] + graph.width
+                yi = graph.pos[1]
+                yf = graph.pos[1] + graph.height
+                NewValuex = self.changeRange(50, 0, xf, xi, x)
+                NewValuey = self.changeRange(10, -10, yf, yi, y)
+                Color(0.2, 0, 0.8, 1, mode='rgb')
+                Ellipse(pos=(NewValuex - d / 2, NewValuey - d / 2), size=(d, d))
+                x += 0.05
 
     #graficar error
     def draw_error(self, e, t, n):
-        with self.canvas:
-            Color(0, 0, 1, 1.0, mode='rgb')
+        graph = self.ids.errorGraph
+        with graph.canvas:
+            Color(0.2, 0, 0.8, 1, mode='rgb')
             x = t
             y = e
             d = 2
-            graph = self.ids.errorGraph
             xi = graph.pos[0]
             xf = graph.pos[0] + graph.width
             yi = graph.pos[1]
@@ -174,6 +197,7 @@ class MainMenu(BoxLayout):
     def changeFunction(self, button, selection):
         button.text = selection
         self.set_lines()
+        self.graphFunction(selection)
 
     #cuando se da clic en entrenar
     def start_training(self, me, ng, de, f):
