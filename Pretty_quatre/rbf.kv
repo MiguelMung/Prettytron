@@ -1,0 +1,230 @@
+#Base de la ventana
+<MainMenu>:
+    BoxLayout:
+        orientation: 'horizontal'
+        padding: 10,10,10,10
+        spacing: 5
+
+        #Se pinta la imagen de fondo
+        canvas:
+            Rectangle:
+                pos: self.pos
+                size: self.size
+                source: "Img/fondoC.jpg"
+#parte de coordenadas
+        FloatLayout:
+            size_hint: 0.01, 1
+            Label:
+                color: 0.5,0,.4,1
+                text: '10'
+                pos_hint: {"x": -.1, 'y': .5}
+            Label:
+                color: 0.5,0,.4,1
+                text: '0'
+                pos_hint: {"x": -.1, 'y': .18}
+            Label:
+                color: 0.5,0,.4,1
+                text: '-10'
+                pos_hint: {"x": -.1, 'y': -.14}
+           #labels del error
+            Label:
+                color: 0.5,0,.7,1
+                text: '10'
+                pos_hint: {"x": -.1, 'y': -.18}
+                id: maxError
+            Label:
+                color: 0.5,0,.7,1
+                text: '0'
+                pos_hint: {"x": -.1, 'y': -.5}
+#parte izquierda
+        BoxLayout:
+            orientation: 'vertical'
+            size_hint: 0.7, 1
+            spacing: 20
+            Label:
+                id: functionGraph
+                size_hint: 1, 2
+                canvas:
+                    Color:
+                        rgba: .78, .54, .64, 1
+                    Rectangle:
+                        pos: self.pos
+                        size: self.size
+            Label:
+                id: errorGraph
+                size_hint: 1, 1
+                canvas:
+                    Color:
+                        rgba: .78, .54, .84, 1
+                    Rectangle:
+                        pos: self.pos
+                        size: self.size
+#parte de coordenadas
+        FloatLayout:
+            size_hint: 0.01, 1
+            Label:
+                color: 0.5,0,.4,1
+                text: '50'
+                pos_hint: {"x": -.1, 'y': .18}
+            Label:
+                id: epochsg
+                color: 0.5,0,.7,1
+                text: '100'
+                pos_hint: {"x": -.1, 'y': -.5}
+#parte derecha
+        BoxLayout:
+            orientation: 'vertical'
+            spacing: 20
+            size_hint: 0.2, 1
+        #parte de las variables
+            BoxLayout:
+                orientation: 'vertical'
+                size_hint: 1, 0.4
+                spacing: 5
+                BoxLayout:
+                    orientation: 'horizontal'
+                    size_hint: 1, .03
+                    spacing: 10
+                    Label:
+                        text: "Max. Epochs:"
+                        color: 0.4, 0, 0.1, 1
+                    TextInput:
+                        id: maxEp
+                        hint_text: '100'
+                        font_size: 16
+                        background_color: .89, .10, .85, .2
+                        hint_text_color: .89, .10, .45, .5
+                        foreground_color: .89, .10, .45, 1
+                        multiline: 'false'
+                        input_filter: 'int'
+                BoxLayout:
+                    orientation: 'horizontal'
+                    size_hint: 1, .03
+                    spacing: 10
+                    Label:
+                        text: "No. Gaussian:"
+                        color: 0.4, 0, 0.1, 1
+                    TextInput:
+                        id: nGaussian
+                        hint_text: '10'
+                        font_size: 16
+                        background_color: .89, .10, .85, .2
+                        hint_text_color: .89, .10, .45, .5
+                        foreground_color: .89, .10, .45, 1
+                        multiline: 'false'
+                        input_filter: 'int'
+
+                BoxLayout:
+                    orientation: 'horizontal'
+                    size_hint: 1, .03
+                    spacing: 10
+                    Label:
+                        text: "Desired Error:"
+                        color: 0.4, 0, 0.1, 1
+                    TextInput:
+                        id: desiredError
+                        hint_text: '0.01'
+                        font_size: 16
+                        background_color: .89, .10, .85, .2
+                        hint_text_color: .89, .10, .45, .5
+                        foreground_color: .89, .10, .45, 1
+                        multiline: 'false'
+                        input_filter: 'float'
+                GridLayout:
+                    rows: 1
+                    cols: 3
+                    size_hint: 1, 0.1
+                    Label:
+                    Button:
+                        size_hint: None, None
+                        height: 70
+                        width: 70
+                        id: startTraining
+                        background_normal: 'Img/candy2.png'
+                        background_down: 'Img/candy.png'
+                        border: 0,0,0,0
+                        color: 0, 0, 0, 1
+                        text: "TRAIN"
+                        bold: True
+                        on_press: root.getData(maxEp.text, nGaussian.text, desiredError.text, selectedFunction.text, reachedEp, reachedEr, functionGraph, errorGraph)
+                    Label:
+        #parte de las funciones
+            BoxLayout:
+                orientation: 'vertical'
+                size_hint: 1, 0.5
+                BoxLayout:
+                    orientation: 'vertical'
+                    size_hint: 1, 0.1
+                    spacing: 10
+                    Label:
+                        id: reachedEp
+                        text: "Reached Epochs: - "
+                        color: 0.2, 0, 1, 1
+                        font_size: 14
+                    Label:
+                        id: reachedEr
+                        text: "Reached Error: - "
+                        color: 0.2, 0, 1, 1
+                        font_size: 14
+                Label:
+                    text: "Function to Approximate:"
+                    size_hint: 1, .1
+                    color: 0.2, 0, 1, 1
+                Button:
+                    id: selectedFunction
+                    text: 'cos(x)'
+                    font_size: 14
+                    size_hint_y: None
+                    height: 30
+                    on_release: functionList.open(self)
+                    color: 0.5,.1,0.5,1
+                    bold: True
+                    background_normal: 'Img/choco.png'
+                    background_down: 'Img/choco.png'
+                DropDown:
+                    id: functionList
+                    on_select: root.changeFunction(selectedFunction, '{}'.format(args[1]))
+                    size_hint: 1, .4
+                    Button:
+                        text: 'cos(x)'
+                        font_size: 12
+                        size_hint_y: None
+                        height: 30
+                        on_release: functionList.select('cos(x)')
+                        color: 0.5,.1,0.5,.8
+                        bold: True
+                        background_normal: 'Img/choco.png'
+                        background_down: 'Img/choco.png'
+                    Button:
+                        text: '2*sin(x)*cos(x)+cos(x)'
+                        font_size: 12
+                        size_hint_y: None
+                        height: 30
+                        on_release: functionList.select('2*sin(x)*cos(x)+cos(x)')
+                        color: 0.5,.1,0.5,.8
+                        bold: True
+                        background_normal: 'Img/choco.png'
+                        background_down: 'Img/choco.png'
+                    Button:
+                        text: '3*sin(x)^4+5*sin(x)^2+2*cos(x)^5'
+                        font_size: 12
+                        size_hint_y: None
+                        height: 30
+                        on_release: functionList.select('3*sin(x)^4+5*sin(x)^2+2*cos(x)^5')
+                        color: 0.5,.1,0.5,.8
+                        bold: True
+                        background_normal: 'Img/choco.png'
+                        background_down: 'Img/choco.png'
+                    Button:
+                        text: 'e+2*cos(x)^5+sin(x)'
+                        font_size: 12
+                        size_hint_y: None
+                        height: 30
+                        on_release: functionList.select('e+2*cos(x)^5+sin(x)')
+                        color: 0.5,.1,0.5,.8
+                        bold: True
+                        background_normal: 'Img/choco.png'
+                        background_down: 'Img/choco.png'
+
+                Label:
+                    size_hint: 1, .2
